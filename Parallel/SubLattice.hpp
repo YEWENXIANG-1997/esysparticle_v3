@@ -1375,6 +1375,16 @@ void TSubLattice<T>::addSingleIG()
       )
     );
   }
+  else if (type == "FluidForce")
+  { // sawano
+  	esys::lsm::FluidForceIGP prms =
+  		esys::lsm::FluidForceIGP::extract(&param_buffer);
+  
+  	// add to map
+  	m_singleParticleInteractions.insert(
+  		std::pair<string, AInteractionGroup<T> *>(
+  			prms.Name(), new esys::lsm::FluidForceGroup<T>(*m_ppa)));
+  }
   else {
     throw std::runtime_error(
       std::string("Trying to setup SIG of unknown type: ")
@@ -1702,6 +1712,54 @@ void TSubLattice<T>::removeIG()
   }
 }
 
+
+// sawano
+template <class T> void TSubLattice<T>::setBondBrokenSwitch()
+{
+	console.XDebug() << "TSubLattice<T>::setBondBrokenSwitch()\n";
+	CVarMPIBuffer pbuffer(m_comm);
+	bool found = false;
+
+	// get params
+	pbuffer.receiveBroadcast(0);
+	string igname = pbuffer.pop_string();
+	int fbond			= pbuffer.pop_int();
+	// look for name in map of non-bondend particle pair interactions
+	// auto iter = m_bpis.find(igname);
+	// auto iter = m_bpis.find(igname);
+	// typename map<string, ParallelInteractionStorage_EB<T, CBondedInteraction>
+	// *>::iterator iter = m_bpis.find(igname);
+	map<string, AParallelInteractionStorage *>::iterator iter =
+		m_bpis.find(igname);
+	// if found, remove interaction
+
+	if (iter != m_bpis.end())
+	{
+		found = true;
+		if (fbond == 1)
+		{
+			// iter->setUnbreakable(true);
+			m_bpis[igname]->setUnbreakable(true);
+			console.Debug() << "TSubLattice<T>::setBondBrokenSwitch setUnbreakable "
+												 "true\n"; // sawano
+																	 // test
+		}
+		else
+		{
+			// iter->setUnbreakable(false);
+			m_bpis[igname]->setUnbreakable(false);
+			console.Debug() << "TSubLattice<T>::setBondBrokenSwitch setUnbreakable "
+												 "false\n"; // sawano
+																		// test
+		}
+	}
+
+	if (!found)
+	{
+		console.Error() << "TSubLattice<T>::setBondBrokenSwitch() - nonexisting "
+											 "interaction group - ignore removal\n";
+	}
+}
 
 /*!
   Exchange positions of shared particles with the other sublattices. 
@@ -2570,6 +2628,55 @@ void TSubLattice<T>::setVelocityOfWall()
   {
     (iter->second)->setVelocity(v);
   }
+}
+
+
+// sawano
+/*!
+	Set the tag of a particle. Parameters are received from master.
+*/
+template <class T> void TSubLattice<T>::setParticleTag()
+{
+	console.Debug() << "TSubLattice<T>::setParticleTag()\n";
+	CVarMPIBuffer buffer(m_comm);
+
+	buffer.receiveBroadcast(0); // get data from master
+	int id	= buffer.pop_int();
+	int tag = buffer.pop_int();
+	m_ppa->forParticle(id, (void (T::*)(int))(&T::setTag), tag); // TODO change
+	console.XDebug() << "end TSubLattice<T>::setParticleTag()\n";
+}
+
+
+// sawano
+/*!
+	Set the velocity of a particle. Parameters are received from master.
+*/
+template <class T> void TSubLattice<T>::setParticleFluidForce()
+{
+	console.Debug() << "TSubLattice<T>::setParticleFluidForce()\n";
+	CVarMPIBuffer buffer(m_comm);
+
+	buffer.receiveBroadcast(0); // get data from master
+	int id	= buffer.pop_int();
+	Vec3 bf = buffer.pop_vector();
+	m_ppa->forParticle(id, (void (T::*)(Vec3))(&T::setFForce), bf);
+	console.XDebug() << "end TSubLattice<T>::setParticleFluidForce()\n";
+}
+
+// sawano
+/*!
+	Set the velocity of a particle. Parameters are received from master.
+*/
+template <class T> void TSubLattice<T>::setParticleRadiusFactor()
+{
+	console.Debug() << "TSubLattice<T>::setParticleRadiusFactor()\n";
+	CVarMPIBuffer buffer(m_comm);
+
+	buffer.receiveBroadcast(0); // get data from master
+	double fac = buffer.pop_double();
+	m_ppa->forAllParticles((void (T::*)(double))(&T::scaleRad), fac);
+	console.XDebug() << "end TSubLattice<T>::setParticleRadiusFactor()\n";
 }
 
 /*!

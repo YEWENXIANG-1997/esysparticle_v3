@@ -831,6 +831,17 @@ namespace esys
       std::cerr << " Use at your own risk  " << std::endl;
     }
 
+    // sawano
+    /*!
+      constructor for FluidForcePrmsPy
+
+      \param name
+    */
+    FluidForcePrmsPy::FluidForcePrmsPy(const std::string &name) 
+      : FluidForceIGP(name)
+    {
+    }
+
     /*!
       constructor for GravityPrmsPy
 
@@ -2177,6 +2188,30 @@ namespace esys
         "@return: Name assigned to this group of interactions.\n"
       )
       ;
+
+      // sawano
+      boost::python::class_<FluidForcePrmsPy,boost::python::bases<InteractionPrmsPy> >(
+        "FluidForcePrms",
+        "Parameters for describing gravitational body force.",
+        boost::python::init<const std::string &>(
+          (
+            arg("name")
+          ),
+          "test\n"
+          "Fluid body force applied to all particles.\n"
+          "@type name: string\n"
+          "@kwarg name: name of this interaction.\n"
+        )
+      )
+      .def(
+        "getName",
+        &FluidForcePrmsPy::getName,
+        boost::python::return_value_policy<boost::python::copy_const_reference>(),
+        "@rtype: string\n"
+        "@return: Name assigned to this group of interactions.\n"
+      )
+      ;
+
 
       boost::python::class_<BuoyancyPrmsPy,boost::python::bases<InteractionPrmsPy> >(
         "BuoyancyPrms",

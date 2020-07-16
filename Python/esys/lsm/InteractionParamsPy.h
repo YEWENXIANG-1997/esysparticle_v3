@@ -587,6 +587,19 @@ namespace esys
       );
     };
 
+
+    /*! // sawano
+      \class FluidForceParamsPy 
+      \brief wrapper for FluidForceIGP
+    */
+    class FluidForcePrmsPy : public FluidForceIGP
+    {
+    public:
+      FluidForcePrmsPy(
+        const std::string &name
+      );
+    };
+
     /*!
       \class VWFrictionPrmsPy
       \brief wrapper for VWFrictionIGP

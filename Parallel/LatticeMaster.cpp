@@ -1135,6 +1135,68 @@ void CLatticeMaster::setParticleVel(int id,const Vec3& V)
   barrier.wait("setParticleVel");
 }
 
+// sawano
+/*!
+	set the bodyforce of a particle
+
+	\param id  the id of the particle to be added force
+	\param V the bodyforce
+*/
+void CLatticeMaster::setParticleFluidForce(int id, const Vec3 &V)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer buffer(m_global_comm);
+	CMPIBarrier barrier(m_global_comm);
+
+	cmd_buffer.broadcast(CMD_PFF);
+	buffer.append(id);
+	buffer.append(V);
+	buffer.broadcast(m_global_rank);
+	barrier.wait("setParticleFluidForce");
+}
+
+// sawano
+/*!
+	set the tag of a particle
+
+	\param id  the id of the particle to be set the tag
+	\param tag tag
+*/
+
+void CLatticeMaster::setParticleTag(int id, int tag)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer buffer(m_global_comm);
+	CMPIBarrier barrier(m_global_comm);
+
+	cmd_buffer.broadcast(CMD_PTAG2);
+	buffer.append(id);
+	buffer.append(tag);
+	buffer.broadcast(m_global_rank);
+	barrier.wait("setParticleTag");
+}
+
+
+// sawano
+/*!
+	Call the SubLattice function to set scaling factor of radius for all the
+	particle.
+
+	\param factor scaling factor
+*/
+void CLatticeMaster::setParticleRadiusFactor(double factor)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer buffer(m_global_comm);
+	CMPIBarrier barrier(m_global_comm);
+	console.Debug() << "CLatticeMaster::setParticleRadiusFactor @ sawano \n";
+	cmd_buffer.broadcast(CMD_PSCALEFAC);
+	buffer.append(factor);
+	buffer.broadcast(m_global_rank);
+	barrier.wait("setParticleRadiusFactor");
+}
+
+
 /*!
   set the velocity of all particles with a given tag
   	 
@@ -2411,6 +2473,30 @@ void CLatticeMaster::addRotThermBondedIG(
   console.XDebug() << "end CLatticeMaster::addRotThermBondedIG()" << "\n";
 }
 
+// sawano
+void CLatticeMaster::setBondBrokenSwitch(const std::string &interactionName,
+																				 int fbond)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer pbuffer(m_global_comm, 20);
+	CMPIBarrier barrier(m_global_comm);
+	console.XDebug() << "CLatticeMaster::setBondBrokenSwitch()\n ";
+	// send the command
+	cmd_buffer.broadcast(CMD_SETBBROKEN);
+	// send parameters
+	pbuffer.append(interactionName.c_str());
+	pbuffer.append(fbond);
+
+	pbuffer.broadcast(0);
+
+	// broadcast connection data
+	// m_tml_global_comm.broadcast_cont(m_temp_conn[tag]);
+
+	barrier.wait("addRotThermBondedIG()");
+	console.XDebug() << "end CLatticeMaster::addRotThermBondedIG()"
+									 << "\n";
+}
+
 int CLatticeMaster::getNumParticles()
 {
   BroadcastCommand cmd(getGlobalRankAndComm(), CMD_GETNUMPARTICLES);
@@ -3342,6 +3428,14 @@ public:
     append(buoyancyIGP.getTypeString().c_str());
     packInto(buoyancyIGP);
   }
+
+
+  // sawano
+  void appendFluidForceIGP(const esys::lsm::FluidForceIGP &fluidforceIGP)
+  {
+    append(fluidforceIGP.getTypeString().c_str());
+    packInto(fluidforceIGP);
+  }
 };
 
 void CLatticeMaster::addSingleIG(const esys::lsm::GravityIGP &gravityIGP)
@@ -3357,6 +3451,15 @@ void CLatticeMaster::addSingleIG(const esys::lsm::BuoyancyIGP &buoyancyIGP)
   sigCmd.appendBuoyancyIGP(buoyancyIGP);
   sigCmd.broadcast();
 }
+
+// sawano
+void CLatticeMaster::addSingleIG(const esys::lsm::FluidForceIGP &fluidforceIGP)
+{
+	SIGCommand sigCmd(getGlobalRankAndComm());
+	sigCmd.appendFluidForceIGP(fluidforceIGP);
+	sigCmd.broadcast();
+}
+
 
 #if 0
 /*!

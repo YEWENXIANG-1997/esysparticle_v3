@@ -121,4 +121,13 @@ const int CMD_GETMESHFACEREF=4097;
 const int CMD_GETMESH2DSTRESS=4098;
 const int CMD_GETTRIMESHFORCE=4099;
 
+
+// sawano
+// -------------------------------
+
+const int CMD_PFF				 = 5000;
+const int CMD_SETBBROKEN = 5001;
+const int CMD_PSCALEFAC	 = 5002;
+const int CMD_PTAG2			 = 5003;
+
 #endif //__SUBLATTICE_CMD_H

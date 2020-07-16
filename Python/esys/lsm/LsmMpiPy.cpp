@@ -440,6 +440,13 @@ namespace esys
       getLatticeMaster().addPairIG(prms);
     }
 
+
+    // sawano
+    void LsmMpiPy::setBondBrokenSwitch(const std::string &interactionName, int fbond)
+    {
+    	getLatticeMaster().setBondBrokenSwitch(interactionName, fbond);
+    }
+
     void LsmMpiPy::createNRotBondInteractGrp(
       const NRotBondPrmsPy &bondPrms
     )
@@ -622,6 +629,13 @@ namespace esys
     {
       getLatticeMaster().addSingleIG(prms);
     }
+
+    // sawano
+    void LsmMpiPy::createFluidForce(const FluidForcePrmsPy &prms)
+    {
+    	getLatticeMaster().addSingleIG(prms);
+    }
+
 
     void  LsmMpiPy::removeInteractionGrp(const std::string& name)
     {
@@ -1129,6 +1143,27 @@ namespace esys
     {
       getLatticeMaster().setParticleNonTrans(id);
     }
+
+
+    // sawano
+    void LsmMpiPy::setParticleFluidForce(int id, const Vec3Py &V)
+    {
+    	getLatticeMaster().setParticleFluidForce(id, V);
+    }
+    
+    // sawano
+    void LsmMpiPy::setParticleRadiusFactor(double factor)
+    {
+    	console.Debug() << "LsmMpiPy::setParticleRadiusFactor @sawano \n";
+    	getLatticeMaster().setParticleRadiusFactor(factor);
+    }
+    
+    // sawano
+    void LsmMpiPy::setParticleTag(int id, int tag)
+    {
+    	getLatticeMaster().setParticleTag(id, tag);
+    }
+    
 
     // ------------------------------
     //    field saving functions 
@@ -2065,6 +2100,13 @@ namespace esys
         &LsmMpiPy::createGravity,
         (arg("prms"))
       )
+
+      .def( // sawano
+	"createInteractionGroup",
+	&LsmMpiPy::createFluidForce,
+	(arg("prms"))
+	)
+
       .def(
         "createInteractionGroup",
         &LsmMpiPy::createBuoyancy,
@@ -2266,6 +2308,14 @@ namespace esys
         "@type prms: L{BuoyancyPrms<esys.lsm.LsmPy.BuoyancyPrms>}\n"
         "@kwarg prms: Parameters specifying buoyancy force.\n"
       )
+
+      // sawano
+      .def("createFluidForce",
+	 &LsmMpiPy::createFluidForce,
+	 (arg("prms")),
+	 "Creates a fluid body force within the model.\n"
+	 "@type prms: L{FluidForcePrms<esys.lsm.LsmPy.FluidForcePrms>}\n"
+	 "@kwarg prms: 0,0,0.\n")
       .def(
         "createInteractionGroupTagged",
         &LsmMpiPy::createRotFrictionInteractGrpTag,
@@ -2418,6 +2468,15 @@ namespace esys
         "@kwarg normal: The normal to the plane describing the orientation of"
         " the wall.\n"
       )
+      // sawano
+      .def("setBondBrokenSwitch",
+	 &LsmMpiPy::setBondBrokenSwitch,
+	 (arg("interactionName"), arg("unbrokenflag")),
+	 "Set the switch of bond breaking for brittlebeam.\n"
+	 "@type interactionName: string\n"
+	 "@type unbrokenflag: int\n"
+	 "@kwarg interactionName: interactionName.\n"
+	 "@kwarg bBroken: flag for bond breaking. 1:unbroken, other:broken.")
       .def(
         "getWallPosition",
         &LsmMpiPy::getWallPosition,
@@ -2855,6 +2914,32 @@ namespace esys
         "@type tag: int\n"
         "@kwarg tag: the tag of the particle."
       )
+      
+      // sawano
+      .def("setParticleTag",
+      		 &LsmMpiPy::setParticleTag,
+      		 (arg("id"), arg("tag")),
+      		 "Set the velocity of a particle \n"
+      		 "@type id: int\n"
+      		 "@kwarg id: the ID of the particle \n"
+      		 "@type tag: int\n"
+      		 "@kwarg tag: The tag of the particle.\n")
+      // sawano
+      .def("setParticleFluidForce",
+      		 &LsmMpiPy::setParticleFluidForce,
+      		 (arg("id"), arg("FluidForce")),
+      		 "Set the fluidforce of a particle \n"
+      		 "@type id: int\n"
+      		 "@kwarg id: the ID of the particle \n"
+      		 "@type Fluidforce: L{Vec3<esys.lsm.util.FoundationPy.Vec3>}\n"
+      		 "@kwarg Fluidforce: The fluidforce of the particle.\n")
+      // sawano
+      .def("setParticleRadiusFactor",
+      		 &LsmMpiPy::setParticleRadiusFactor,
+      		 (arg("factor")),
+      		 "Set the scaling factor for radius \n"
+      		 "@type factor: double\n"
+      		 "@kwarg factor: the scaling factor \n")
       .def(
         "addPreTimeStepRunnable",
         &LsmMpiPy::addPreTimeStepRunnable,

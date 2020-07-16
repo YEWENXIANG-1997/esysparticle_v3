@@ -85,6 +85,7 @@ class CParticle : public CBasicParticle, public esys::lsm::CheckPointable
   //! stress tensor. \warning Warning: this is unscaled, i.e. without the 1/V term
   Matrix3 m_sigma; 
   Vec3 m_vel,m_force;
+  Vec3 m_fforce; // sawano
   Vec3 m_oldpos; //!< position at the time of last neighbor search
   Vec3 m_initpos; //!< position at time of construction
   Vec3 m_circular_shift; //!< shift vector if particle is circular image
@@ -114,10 +115,12 @@ class CParticle : public CBasicParticle, public esys::lsm::CheckPointable
   inline Vec3 getVel() const {return m_vel;};
   inline double getAbsVel() const {return m_vel.norm();};
   inline void setVel(const Vec3 &V){m_vel=V;};
+  inline void setFForce(const Vec3 &V){m_fforce=V;}; // sawano
   inline void setMass(double mass) {m_mass = mass; m_div_mass = 1.0/m_mass;}
   inline double getMass() const {return m_mass;};
   inline double getInvMass() const {return m_div_mass;};
   inline Vec3 getForce() const {return m_force;};
+  inline Vec3 getFForce() const {return m_fforce;}; // sawano
   virtual void setDensity(double); // needs to be virtual , different for rot. particle (mom. inert) 
 
   void resetDisplacement(){m_oldpos=m_pos;};

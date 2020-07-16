@@ -239,6 +239,9 @@ public:
     void addTaggedPairIG(const CElasticIGP &prms,int,int,int,int);
 
     void removeIG(const std::string&);
+
+    // sawano
+    void setBondBrokenSwitch(const std::string &interactionName, int fbond);
     
     void readAndDistributeTriMesh(const std::string&,const std::string&,int);
     void readAndDistributeTriMesh(const std::string&,const std::string&);
@@ -263,6 +266,7 @@ public:
     
     void addSingleIG(const esys::lsm::GravityIGP &gravityIGP);
     void addSingleIG(const esys::lsm::BuoyancyIGP &buoyancyIGP);
+    void addSingleIG(const esys::lsm::FluidForceIGP &fluidforceIGP); // sawano
     void addExIG(const std::string&,const std::string&);
     void setNumSteps(int s);
     int getNumSteps() const {return m_max_ts;};
@@ -300,6 +304,9 @@ public:
     void setParticleNonRot(int);
     void setParticleNonTrans(int);
     void setParticleVel(int,const Vec3&);
+    void setParticleFluidForce(int, const Vec3 &); // sawano
+    void setParticleRadiusFactor(double); // sawano
+    void setParticleTag(int, int); // sawano
     void setParticleAngVel(int,const Vec3&);
     void setParticleDensity(int tag,int mask,double rho);
     void setTaggedParticleVel(int tag,const Vec3&);

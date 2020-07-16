@@ -181,6 +181,7 @@ class TSubLattice : public ASubLattice
   virtual void addDamping();
   virtual void setExIG();
   virtual void removeIG();
+  virtual void setBondBrokenSwitch(); // sawano
   virtual void getWallPos();
   virtual void getWallForce();
   virtual void addSphereBody();
@@ -222,6 +223,9 @@ class TSubLattice : public ASubLattice
   virtual void setWallNormal();
   virtual void applyForceToWall();
   virtual void setParticleVelocity();
+  virtual void setParticleFluidForce(); // sawano
+  virtual void setParticleRadiusFactor(); // sawano
+  virtual void setParticleTag(); // sawano
   virtual void setVelocityOfWall();
   virtual void setParticleNonDynamic();
   virtual void setParticleNonRot();

@@ -30,6 +30,7 @@ namespace esys
       BodyForceIGP();
 
       BodyForceIGP(const std::string &name, const Vec3 &acceleration);
+      BodyForceIGP(const std::string &name);  //sawano
 
       virtual ~BodyForceIGP();
 
@@ -46,6 +47,32 @@ namespace esys
     protected:
       Vec3 m_acceleration;
     };
+
+    // sawano
+    class FluidForceIGP : public AIGParam
+    {
+    public:
+
+      FluidForceIGP()
+      {
+      }
+
+      // FluidForceIGP(const std::string &name, const Vec3 &acceleration) : BodyForceIGP(name, acceleration)
+      // {
+      // }
+
+      FluidForceIGP(const std::string &name);
+      // FluidForceIGP(const std::string &name) : BodyForceIGP(name)
+      // {
+      // }
+
+      virtual std::string getTypeString() const {return "FluidForce";}
+      virtual void packInto(CVarMPIBuffer *pBuffer) const;
+      static FluidForceIGP extract(CVarMPIBuffer *pBuffer);
+
+    private:
+    };
+
 
     class GravityIGP : public BodyForceIGP
     {
@@ -183,6 +210,46 @@ namespace esys
       ParticleArray *m_pParticleArray;
       double m_fluidDensity, m_fluidHeight;
     };
+
+
+
+
+    // sawano
+    template <class TmplParticle>
+    class FluidForceGroup : public AInteractionGroup<TmplParticle>
+    {
+    public:
+      typedef ParallelParticleArray<TmplParticle> ParticleArray;
+      typedef typename ParticleArray::ParticleListIterator ParticleIterator;
+
+      FluidForceGroup(ParticleArray &particleArray);
+
+      ~FluidForceGroup();
+
+      /**
+       * Applies body force to the specified particle.
+       *
+       * @param particle Force applied to this particle using
+       *                 a call to particle.applyForce(...).
+       */
+      void applyForce(TmplParticle &particle) const;
+
+      virtual void Update(ParallelParticleArray<TmplParticle> *particleArray);
+
+      /**
+       * Null op, time step size not required.
+       */
+      virtual void setTimeStepSize(double dt)
+      {
+      }
+
+      virtual void calcForces();
+
+    private:
+      ParticleArray *m_pParticleArray;
+    };
+
+
   }
 }
 

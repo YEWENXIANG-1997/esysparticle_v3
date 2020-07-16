@@ -58,6 +58,7 @@ class AParallelInteractionStorage : public esys::lsm::CheckPointable
   virtual void calcForces()=0;
   virtual void calcHeatFrict() {}
   virtual void calcHeatTrans() {}
+  virtual void setUnbreakable(bool){}; // sawano
   virtual void setTimeStepSize(double dt)=0;
   virtual void addExIG(AParallelInteractionStorage*){}; // do nothing
   virtual AFieldSlave* generateNewScalarFieldSlave(TML_Comm*,const string&,int,int,int,int)=0;

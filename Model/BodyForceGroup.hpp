@@ -164,5 +164,46 @@ namespace esys
     void BuoyancyForceGroup<TmplParticle>::Update(ParallelParticleArray<TmplParticle> *particleArray)
     {
     }
+
+
+    // sawano
+    template <class TmplParticle>
+    FluidForceGroup<TmplParticle>::FluidForceGroup(
+      ParticleArray &particleArray
+    )
+      : m_pParticleArray(&particleArray)
+    {
+    }
+
+    template <class TmplParticle>
+    FluidForceGroup<TmplParticle>::~FluidForceGroup()
+    {
+    }
+
+    template <class TmplParticle>
+    void FluidForceGroup<TmplParticle>::applyForce(TmplParticle &particle) const
+    {
+      particle.applyForce(particle.getFForce(), particle.getPos());
+    }
+
+    template <class TmplParticle>
+    void FluidForceGroup<TmplParticle>::calcForces()
+    {
+      typename ParticleArray::ParticleListHandle plh = m_pParticleArray->getAllParticles();
+      for (
+        ParticleIterator it = plh->begin();
+        it != plh->end();
+        it++
+      )
+      {
+        applyForce(*(*it));
+      }
+    }
+
+    template <class TmplParticle>
+    void FluidForceGroup<TmplParticle>::Update(ParallelParticleArray<TmplParticle> *particleArray)
+    {
+    }
+
   }
 }

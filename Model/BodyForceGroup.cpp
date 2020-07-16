@@ -27,6 +27,12 @@ namespace esys
     {
     }
 
+    // sawano
+    BodyForceIGP::BodyForceIGP(const std::string &name)
+      : AIGParam(name)
+    {
+    }
+
     BodyForceIGP::~BodyForceIGP()
     {
     }
@@ -58,6 +64,23 @@ namespace esys
       const double z = pBuffer->pop_double();
 
       return BodyForceIGP(name, Vec3(x, y, z));
+    }
+
+    // sawano
+    FluidForceIGP::FluidForceIGP(const std::string &name) : AIGParam(name)
+    {
+    }
+
+    void FluidForceIGP::packInto(CVarMPIBuffer *pBuffer) const
+    {
+      pBuffer->append(getName().c_str());
+    }
+
+    FluidForceIGP FluidForceIGP ::extract(CVarMPIBuffer *pBuffer)
+    {
+      const std::string name = pBuffer->pop_string();
+
+      return FluidForceIGP(name);
     }
 
     BuoyancyIGP::BuoyancyIGP (const std::string &name, const Vec3 &acceleration, const double &fluidDensity, const double &fluidHeight) : AIGParam(name), m_acceleration(acceleration), m_fluidDensity (fluidDensity), m_fluidHeight (fluidHeight)

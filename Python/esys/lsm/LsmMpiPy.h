@@ -87,6 +87,7 @@ namespace esys
     class BoundingBoxPy;
     class GravityPrmsPy;
     class BuoyancyPrmsPy;
+    class FluidForcePrmsPy; // sawano
     class MaxTriggerPrmsPy;
 
 
@@ -166,6 +167,7 @@ namespace esys
       void createABCDamping(const ABCDampingPrmsPy &prms);
       void createGravity(const GravityPrmsPy&);
       void createBuoyancy(const BuoyancyPrmsPy&);
+      void createFluidForce(const FluidForcePrmsPy &); // sawano
       void createVWFrictionIG(const VWFrictionPrmsPy&);
       void createHertzianElasticIG(const HertzianElasticPrmsPy &prms);
       void createHertzianViscoElasticFrictionIG(const HertzianViscoElasticFrictionPrmsPy &prms);
@@ -173,6 +175,11 @@ namespace esys
       void createHertzMindlinIG(const HertzMindlinPrmsPy &prms);
       void createHertzMindlinViscoIG(const HertzMindlinViscoPrmsPy &prms);
       void createLinearDashpotIG(const LinearDashpotPrmsPy &prms);
+
+
+      // --- interaction settinf functions ---
+      // sawano
+      void setBondBrokenSwitch(const std::string &interactionName, int fBond);
 
       
       // --- remove interactions ---
@@ -203,6 +210,11 @@ namespace esys
       void setParticleNonDynamic(int);
       void setParticleNonRot(int);
       void setParticleNonTrans(int);
+
+      // sawano
+      void setParticleFluidForce(int, const Vec3Py &);
+      void setParticleRadiusFactor(double);
+      void setParticleTag(int, int);
       
       // ---- checkpointing -----------
       void createCheckPointer(const RestartCheckPointPrmsPy &prms);

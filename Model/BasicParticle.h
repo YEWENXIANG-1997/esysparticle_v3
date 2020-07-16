@@ -65,6 +65,8 @@ public:
   inline int getID() const {return m_global_id;}
   inline void setID(int id) {m_global_id = id;}
 
+  inline void scaleRad(double factor) { m_rad = factor * m_rad; } // sawano
+
   inline void moveBy(Vec3 v){m_pos+=v;} //!< move relative to current position
   inline void moveTo(Vec3 v){m_pos=v;} //!< move absolute
   inline void setRad(double r){m_rad=r;}
