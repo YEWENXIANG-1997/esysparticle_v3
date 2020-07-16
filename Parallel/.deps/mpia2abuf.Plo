@@ -1,0 +1,12 @@
+mpia2abuf.lo: mpia2abuf.cpp mpia2abuf.h \
+ /usr/local/openmpi-4.0.1/include/mpi.h \
+ /usr/local/Cellar/gcc@8/8.3.0_2/lib/gcc/8/gcc/x86_64-apple-darwin19/8.3.0/include/stddef.h \
+ /usr/local/openmpi-4.0.1/include/mpi_portable_platform.h
+
+mpia2abuf.h:
+
+/usr/local/openmpi-4.0.1/include/mpi.h:
+
+/usr/local/Cellar/gcc@8/8.3.0_2/lib/gcc/8/gcc/x86_64-apple-darwin19/8.3.0/include/stddef.h:
+
+/usr/local/openmpi-4.0.1/include/mpi_portable_platform.h:

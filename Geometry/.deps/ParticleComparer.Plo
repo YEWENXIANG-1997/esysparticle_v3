@@ -1,0 +1,6 @@
+ParticleComparer.lo: ParticleComparer.cpp ../Geometry/ParticleComparer.h \
+ ../Geometry/ParticleComparer.hpp
+
+../Geometry/ParticleComparer.h:
+
+../Geometry/ParticleComparer.hpp:
