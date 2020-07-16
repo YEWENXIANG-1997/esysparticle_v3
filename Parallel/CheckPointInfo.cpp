@@ -15,7 +15,7 @@
 #include "Parallel/CheckPointInfo.h"
 #include "Geometry/GeometryInfo.h"
 #include "Foundation/version.h"
-#include "bzrversion.h"
+//#include "bzrversion.h" // sawano
 
 namespace esys
 {
@@ -30,7 +30,8 @@ namespace esys
           m_timeStep(0),
           m_geoInfo(),
           m_fileNames(),
-	  m_bzrVersion(s_bzr_revision)
+	  m_bzrVersion(0)
+	  //m_bzrVersion(s_bzr_revision)
       {
       }
 
