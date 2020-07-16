@@ -18,7 +18,8 @@ namespace esys
   namespace lsm
   {
     bool ParticleData::s_is3d = true;
-    const double ParticleData::FOUR_THIRDS_PI = ((4.0/3.0)*M_PIl);
+    const double ParticleData::FOUR_THIRDS_PI = ((4.0/3.0)*M_PI); // sawano
+    //const double ParticleData::FOUR_THIRDS_PI = ((4.0/3.0)*M_PIl);
   }
 }
 

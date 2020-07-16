@@ -1276,7 +1276,9 @@ void writeMeshFile(const string& infilename,const string& outfilename, int snapN
   string header,skip;
   int numMeshIG;
 
-  while (datafile >> header != NULL){
+  string strBuf; // sawano
+  while (getline(datafile >> header, strBuf, '\0')){ // sawano
+  //while (datafile >> header != NULL){ // sawano
     if (header == "TMIG"){
       datafile >> numMeshIG;
       for(int ni=0;ni<numMeshIG;ni++){
