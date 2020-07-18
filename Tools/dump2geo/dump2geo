@@ -37,7 +37,7 @@ relink_command=""
 if test "$libtool_install_magic" = "%%%MAGIC variable%%%"; then
   # install mode needs the following variables:
   generated_by_libtool_version='2.4.6'
-  notinst_deplibs=' ../../Foundation/libFoundation.la ../../Geometry/libGgGeometry.la ../../Parallel/libParallel.la /Users/sawano/esys/ESyS-Particle-2.3.5/ppa/src/libppa.la /Users/sawano/esys/ESyS-Particle-2.3.5/ntable/src/libntable.la /Users/sawano/esys/ESyS-Particle-2.3.5/Fields/libFields.la /Users/sawano/esys/ESyS-Particle-2.3.5/Model/libModel.la /Users/sawano/esys/ESyS-Particle-2.3.5/Geometry/libGgGeometry.la /Users/sawano/esys/ESyS-Particle-2.3.5/tml/comm/libTmlComm.la /Users/sawano/esys/ESyS-Particle-2.3.5/Foundation/libFoundation.la /Users/sawano/esys/ESyS-Particle-2.3.5/tml/message/libTmlMessage.la /Users/sawano/esys/ESyS-Particle-2.3.5/tml/type/libTmlType.la /Users/sawano/esys/ESyS-Particle-2.3.5/pis/libpis.la'
+  notinst_deplibs=' ../../Foundation/libFoundation.la ../../Geometry/libGgGeometry.la ../../Parallel/libParallel.la /Users/sawano/esys/esysparticle_v3/ppa/src/libppa.la /Users/sawano/esys/esysparticle_v3/ntable/src/libntable.la /Users/sawano/esys/esysparticle_v3/Fields/libFields.la /Users/sawano/esys/esysparticle_v3/Model/libModel.la /Users/sawano/esys/esysparticle_v3/Geometry/libGgGeometry.la /Users/sawano/esys/esysparticle_v3/tml/comm/libTmlComm.la /Users/sawano/esys/esysparticle_v3/Foundation/libFoundation.la /Users/sawano/esys/esysparticle_v3/tml/message/libTmlMessage.la /Users/sawano/esys/esysparticle_v3/tml/type/libTmlType.la /Users/sawano/esys/esysparticle_v3/pis/libpis.la'
 else
   # When we are sourced in execute mode, $file and $ECHO are already set.
   if test "$libtool_execute_magic" != "%%%MAGIC variable%%%"; then
@@ -188,7 +188,7 @@ func_exec_program ()
 
   if test -f "$progdir/$program"; then
     # Add our own library path to DYLD_LIBRARY_PATH
-    DYLD_LIBRARY_PATH="/Users/sawano/esys/ESyS-Particle-2.3.5/Foundation/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/Geometry/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/Parallel/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/ppa/src/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/ntable/src/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/Fields/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/Model/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/tml/comm/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/tml/message/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/tml/type/.libs:/Users/sawano/esys/ESyS-Particle-2.3.5/pis/.libs:$DYLD_LIBRARY_PATH"
+    DYLD_LIBRARY_PATH="/Users/sawano/esys/esysparticle_v3/Foundation/.libs:/Users/sawano/esys/esysparticle_v3/Geometry/.libs:/Users/sawano/esys/esysparticle_v3/Parallel/.libs:/Users/sawano/esys/esysparticle_v3/ppa/src/.libs:/Users/sawano/esys/esysparticle_v3/ntable/src/.libs:/Users/sawano/esys/esysparticle_v3/Fields/.libs:/Users/sawano/esys/esysparticle_v3/Model/.libs:/Users/sawano/esys/esysparticle_v3/tml/comm/.libs:/Users/sawano/esys/esysparticle_v3/tml/message/.libs:/Users/sawano/esys/esysparticle_v3/tml/type/.libs:/Users/sawano/esys/esysparticle_v3/pis/.libs:$DYLD_LIBRARY_PATH"
 
     # Some systems cannot cope with colon-terminated DYLD_LIBRARY_PATH
     # The second colon is a workaround for a bug in BeOS R4 sed
