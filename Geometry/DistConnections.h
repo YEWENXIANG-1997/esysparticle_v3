@@ -83,8 +83,8 @@ namespace esys
         Tag defaultTag = 0,
 
         // sawano
-        //const BoundingBox &bBox = BoundingBox(Vec3(-0.01,-0.01,-0.01), Vec3(0.01,0.01,0.01)),
-	const BoundingBox &bBox = BoundingBox(Vec3(-10,-10,-10), Vec3(10,10,10)),
+        const BoundingBox &bBox = BoundingBox(Vec3(-0.01,-0.01,-0.01), Vec3(0.01,0.01,0.01)),
+	      //const BoundingBox &bBox = BoundingBox(Vec3(-10,-10,-10), Vec3(10,10,10)),
         const BoolVector  &circDimensions = BoolVector(3, false)
       );
 
