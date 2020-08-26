@@ -137,6 +137,12 @@ class CRotBondedInteraction : public ARotPairInteraction
   double m_truncated;
   double m_beta1;
   double m_beta2;
+  
+  // sawano ////////////
+  double m_normalthreshold;
+  double m_r_0Norm;
+  bool m_isFirst;
+  //////////////////////
 
  public:
 
@@ -154,8 +160,12 @@ class CRotBondedInteraction : public ARotPairInteraction
   void setTag(int tag);
 
   void calcForces();
+  void calcForces_original();
   //void setBreak(double);
   bool broken();
+  // sawano ////////////
+  bool broken_original();
+  //////////////////////
 
   double getPotentialEnergy() const;
   double getNormalPotentialEnergy() const;
