@@ -124,6 +124,11 @@ vector<string> get_filenames(const string& infilename, int version, string& dime
   } else {
     cerr << "unknown checkpoint version " << version << endl;
   }
+  
+  // sawano
+  geo_version = 1.2;
+
+
   // get bounding box
   headerfile >> dummystring;
   headerfile >> xmin >> ymin >> zmin >> xmax >> ymax >> zmax ;
@@ -142,10 +147,15 @@ vector<string> get_filenames(const string& infilename, int version, string& dime
   // periodic bdry
   headerfile >> dummystring >> geo_pbdry[1] >> geo_pbdry[2] >> geo_pbdry[3];
 
+
+
   // v. 1.1 geometry files didn't have dimension info
   if(geo_version>1.15){
     headerfile >> dummystring >> dimension;
   }
+
+  // sawano
+  // cout << "in get_filenames " << dimension << ", " << geo_version << endl;
 
   // get file names
   copy(istream_iterator<string>(headerfile),istream_iterator<string>(),back_inserter(filenames));
@@ -162,12 +172,16 @@ vector<string> get_filenames(const string& infilename, int version, string& dime
 
 void do_single_frame_geo(const string& infilename,const string& outfilename,int iframe,const string& listfilename)
 {
+  // sawano
+  // cout << "do_single_frame_geo" << endl;
   int version=get_version(infilename);
   string dimension;
   float geo_pbdry[4];
   double bdbx[6];
   vector<string> filenames=get_filenames(infilename,version,dimension,geo_pbdry,bdbx);
-  
+  // sawano
+  // cout << "DIMENSION" << dimension << endl;
+
   std::cerr << bdbx[0] << " " << bdbx[1]<< " " << bdbx[2]<< " " << bdbx[3]<< " " << bdbx[4]<< " " << bdbx[5] << endl;
   
   map<int,nr_part> datamap;
@@ -270,12 +284,17 @@ void do_single_frame_geo(const string& infilename,const string& outfilename,int 
 
 void do_single_frame_geo_r(const string& infilename,const string& outfilename,int iframe,bool with_list,const string& listfilename,bool remove_xbonds,double bond_remove_dist,bool with_brklist,const string& brklistname)
 {  
+  // sawano
+  // cout << "do_single_frame_geo_r" << endl;
   int version=get_version(infilename);
   string dimension;
   float geo_pbdry[4];
   double bdbx[6];
   vector<string> filenames=get_filenames(infilename,version,dimension,geo_pbdry,bdbx);
-  
+
+   // sawano
+  // cout << "in do_single_frame_geo_r " << version << ", " << dimension << endl;
+ 
   std::cerr << bdbx[0] << " " << bdbx[1]<< " " << bdbx[2]<< " " << bdbx[3]<< " " << bdbx[4]<< " " << bdbx[5] << endl;
   
   map<int,r_part> datamap;
