@@ -450,7 +450,7 @@ void CRotBondedInteraction::calcForces()
   if(m_isFirst){
     m_r_0Norm = rbNorm;  
     m_isFirst = false;
-    cout << "m_r_0Norm:" << m_r_0Norm << endl;
+    // cout << "m_r_0Norm:" << m_r_0Norm << endl;
   }
   r_0Norm = m_r_0Norm;  
   //const double r_0Norm = m_r0;

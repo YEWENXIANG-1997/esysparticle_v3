@@ -149,6 +149,9 @@ namespace esys
       }
       ConstIdPairSet idPairSet;
       // Resize ntable according to min and max sphere radii.
+      // sawano
+      // cout << "in SphereNeighbours::getNeighbours" << getSphereBBox() << endl;
+
       m_nTablePtr->resize(
         getSphereBBox(),
         4.1*getMinRadius(),

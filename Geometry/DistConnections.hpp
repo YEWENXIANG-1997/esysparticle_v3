@@ -45,6 +45,8 @@ namespace esys
             )
           )
         )/5.0;
+      // sawano
+      // cout << "bBox" << bBox.getMinPt() << ", " << bBox.getMaxPt() << endl;
       m_nTablePtr =
         NTablePtr(
           new NTable(
@@ -135,6 +137,8 @@ namespace esys
         insert(p);
         pSet.insert(&p);
       }
+      // sawano
+      // cout << "in create" << getParticleBBox() << endl;
       m_nTablePtr->resize(getParticleBBox(), 4.1*getMinRadius(), 2.1*getMaxRadius());
 
       for (
