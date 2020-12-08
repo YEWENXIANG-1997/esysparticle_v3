@@ -26,9 +26,9 @@ libltdl/
 Config/
 
 
-#.libs
-#.deps
-#.dirstamp
+.libs
+# .deps
+# .dirstamp
 
 missing
 libtool
