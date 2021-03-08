@@ -242,6 +242,8 @@ public:
 
     // sawano
     void setBondBrokenSwitch(const std::string &interactionName, int fbond);
+    // sawano
+    Vec3 getMinMaxDistance(const std::string &igname);
     
     void readAndDistributeTriMesh(const std::string&,const std::string&,int);
     void readAndDistributeTriMesh(const std::string&,const std::string&);

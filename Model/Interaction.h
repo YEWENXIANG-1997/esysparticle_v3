@@ -54,6 +54,10 @@ class AInteraction
   virtual Vec3 getPosFirst() const=0;
   virtual Vec3 getPosSecond() const{return Vec3(0.0,0.0,0.0);};
   inline double Count() const {return 1.0;};
+  // sawano
+  virtual const double getDistance(){};
+  // sawano
+
 };
 
 
@@ -89,6 +93,11 @@ class APairInteraction : public AInteraction
   virtual bool hasTag(int,int) const;
   virtual Vec3 getPosFirst() const {return m_p1->getPos();};
   virtual Vec3 getPosSecond() const{return m_p2->getPos();};
+
+  // sawano
+  virtual const double getDistance();
+  // sawano
+
 
   esys::lsm::quintuple<Vec3,double,Vec3,double,Vec3> getRaw2Data() const
   {

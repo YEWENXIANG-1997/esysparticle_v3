@@ -68,3 +68,16 @@ bool ARotPairInteraction::hasTag(int tag ,int mask) const
   int tag2=m_p2->getTag();
   return (((tag1 & mask)==(tag & mask))||((tag2 & mask)==(tag & mask)));
 }
+
+
+// sawano
+/*!
+  get the distance between particles
+*/
+const double ARotPairInteraction::getDistance()
+{
+  const Vec3 D=m_p1->getPos()-m_p2->getPos();
+  const double sum2Rad =m_p1->getRad()+m_p2->getRad();
+  const double dist_center = sqrt(D*D);
+  return dist_center - sum2Rad;
+}

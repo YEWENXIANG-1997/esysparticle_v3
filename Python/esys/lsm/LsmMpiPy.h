@@ -181,6 +181,9 @@ namespace esys
       // sawano
       void setBondBrokenSwitch(const std::string &interactionName, int fBond);
 
+      // --- packing functions ---
+      // sawano
+      Vec3Py getMinMaxDistance(const std::string& igname);
       
       // --- remove interactions ---
       void removeInteractionGrp(const std::string&);

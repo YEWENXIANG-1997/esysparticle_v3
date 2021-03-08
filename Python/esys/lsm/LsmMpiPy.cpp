@@ -447,6 +447,14 @@ namespace esys
     	getLatticeMaster().setBondBrokenSwitch(interactionName, fbond);
     }
 
+    // sawano
+    Vec3Py LsmMpiPy::getMinMaxDistance(const std::string& igname)
+    {
+      
+      return getLatticeMaster().getMinMaxDistance(igname);
+    }
+
+
     void LsmMpiPy::createNRotBondInteractGrp(
       const NRotBondPrmsPy &bondPrms
     )
@@ -2102,10 +2110,10 @@ namespace esys
       )
 
       .def( // sawano
-	"createInteractionGroup",
-	&LsmMpiPy::createFluidForce,
-	(arg("prms"))
-	)
+      "createInteractionGroup",
+      &LsmMpiPy::createFluidForce,
+      (arg("prms"))
+      )
 
       .def(
         "createInteractionGroup",
@@ -2311,11 +2319,11 @@ namespace esys
 
       // sawano
       .def("createFluidForce",
-	 &LsmMpiPy::createFluidForce,
-	 (arg("prms")),
-	 "Creates a fluid body force within the model.\n"
-	 "@type prms: L{FluidForcePrms<esys.lsm.LsmPy.FluidForcePrms>}\n"
-	 "@kwarg prms: 0,0,0.\n")
+      &LsmMpiPy::createFluidForce,
+      (arg("prms")),
+      "Creates a fluid body force within the model.\n"
+      "@type prms: L{FluidForcePrms<esys.lsm.LsmPy.FluidForcePrms>}\n"
+      "@kwarg prms: 0,0,0.\n")
       .def(
         "createInteractionGroupTagged",
         &LsmMpiPy::createRotFrictionInteractGrpTag,
@@ -2470,13 +2478,13 @@ namespace esys
       )
       // sawano
       .def("setBondBrokenSwitch",
-	 &LsmMpiPy::setBondBrokenSwitch,
-	 (arg("interactionName"), arg("unbrokenflag")),
-	 "Set the switch of bond breaking for brittlebeam.\n"
-	 "@type interactionName: string\n"
-	 "@type unbrokenflag: int\n"
-	 "@kwarg interactionName: interactionName.\n"
-	 "@kwarg bBroken: flag for bond breaking. 1:unbroken, other:broken.")
+      &LsmMpiPy::setBondBrokenSwitch,
+      (arg("interactionName"), arg("unbrokenflag")),
+      "Set the switch of bond breaking for brittlebeam.\n"
+      "@type interactionName: string\n"
+      "@type unbrokenflag: int\n"
+      "@kwarg interactionName: interactionName.\n"
+      "@kwarg bBroken: flag for bond breaking. 1:unbroken, other:broken.")
       .def(
         "getWallPosition",
         &LsmMpiPy::getWallPosition,
@@ -2486,6 +2494,17 @@ namespace esys
         "Get position of named wall. Returns (0,0,0) for unknown walls.\n"
         "@type name: str\n"
         "@kwarg name: Name of the wall.\n"
+      )
+      // sawano
+      .def(
+        "getMinMaxDistance",
+        &LsmMpiPy::getMinMaxDistance,
+        (arg("name")),
+       "Provides the  minimum and maximum distance of all the particles in the specified name.\n"
+        "@type name: string\n"
+        "@kwarg name: name of interaction group\n"
+        "@rtype: L{Vec3<esys.lsm.util.FoundationPy>}\n"
+        "@return: min and max of distance for all the particles."
       )
       .def(
         "getWallForce",

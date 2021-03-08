@@ -53,6 +53,8 @@ class ParallelInteractionStorage_ED : public ParallelInteractionStorage_E<P,I>
   virtual void calcHeatFrict();
 
   virtual bool willSave(){ return true;};
+
+  virtual const Vec3 getDistance(); // sawano
 };
 
 #include "pis/pi_storage_ed.hpp"

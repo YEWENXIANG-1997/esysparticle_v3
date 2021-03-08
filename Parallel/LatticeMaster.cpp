@@ -2497,6 +2497,43 @@ void CLatticeMaster::setBondBrokenSwitch(const std::string &interactionName,
 									 << "\n";
 }
 
+// sawano
+/*!
+  Call sublattice to get max. distance between particles
+*/
+Vec3 CLatticeMaster::getMinMaxDistance(const std::string &igname)
+{
+  console.Debug() << "CLatticeMaster::getMinMaxDistance(): enter\n";
+  double maxDist=-1.0;
+  double minDist=+1.0;
+
+  // setup command 
+  BroadcastCommand cmd(getGlobalRankAndComm(), CMD_GETDIST);
+
+  cmd.append(igname.c_str());
+
+  // broadcast command buffer
+  cmd.broadcast();
+
+  // collect data
+  multimap<int,double> distmap;
+  m_tml_global_comm.gather(distmap);
+
+  // int count = 0;
+  for(multimap<int,double>::iterator iter=distmap.begin();
+      iter!=distmap.end();
+      iter++){
+    maxDist=std::max(iter->second,maxDist);
+    minDist=std::min(iter->second,minDist);
+    // count++;
+  }
+  // std::cout << "LatticeMaster::" << maxDist << ", " << minDist << std::endl;
+
+  console.Debug() << "CLatticeMaster::getMinMaxDistance: exit\n";
+  return Vec3(minDist,maxDist,0.0);
+}
+
+
 int CLatticeMaster::getNumParticles()
 {
   BroadcastCommand cmd(getGlobalRankAndComm(), CMD_GETNUMPARTICLES);

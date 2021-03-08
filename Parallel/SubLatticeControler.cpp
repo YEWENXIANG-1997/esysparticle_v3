@@ -557,6 +557,7 @@ void CSubLatticeControler::run()
     case CMD_PSCALEFAC: m_lattice->setParticleRadiusFactor(); break; // sawano
     case CMD_PTAG2: m_lattice->setParticleTag(); break;	// sawano
     case CMD_SETBBROKEN: m_lattice->setBondBrokenSwitch(); break; // sawno
+    case CMD_GETDIST: m_lattice->getDistance(); break; // sawno
     case CMD_PMOVE : m_lattice->moveParticleTo(); break;
     case CMD_PMOVETAGGEDBY : m_lattice->moveTaggedParticlesBy(); break;
     case CMD_PSETND : m_lattice->setParticleNonDynamic(); break;

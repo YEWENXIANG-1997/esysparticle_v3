@@ -1863,6 +1863,87 @@ void TSubLattice<T>::calcForces()
   console.XDebug() << "end TSubLattice<T>::calcForces() \n";
 }
 
+// sawano
+/*!
+  Get the distance between particles
+*/
+template <class T>
+void TSubLattice<T>::getDistance()
+{
+  console.XDebug() << "TSubLattice<T>::getDistance() \n";
+
+  CVarMPIBuffer pbuffer(m_comm);
+  bool found=false;
+
+  // get params
+  pbuffer.receiveBroadcast(0);
+  string igname = pbuffer.pop_string();
+  // look for name in map of non-bondend particle pair interactions
+  map<string,AParallelInteractionStorage*>::iterator iter=m_dpis.find(igname);
+
+  vector<double> dist;
+
+  // if found, get the distance between particles
+  // int count = 0;
+  if(iter!=m_dpis.end()){
+    found=true;
+    dist.push_back((iter->second)->getDistance()[0]);
+    dist.push_back((iter->second)->getDistance()[1]);
+    // std::cout << "SubLattice:" << count << std::endl;
+    // count++;
+  }  
+    
+  // send back to master
+  m_tml_comm.send_gather(dist,0);
+
+  if(!found) {
+    console.Error() << "TSubLattice<T>::removeIG() - nonexisting interaction group - ignore removal\n";
+  }
+  else{
+    console.XDebug() << "end TSubLattice<T>::getDistance() \n";
+  }
+
+
+
+  // CVarMPIBuffer pbuffer(m_comm);
+  // bool found=false;
+
+  // // get params
+  // pbuffer.receiveBroadcast(0);
+  // string igname = pbuffer.pop_string();
+ 
+
+
+  // vector<double> dist;
+
+  // // // single particle IGs 
+  // // for(
+  // //   typename NameIGroupMap::iterator siter=this->m_singleParticleInteractions.begin();
+  // //   siter != m_singleParticleInteractions.end();
+  // //   siter++
+  // // )
+  // // {
+  // //   dist=(siter->second)->getDistance();
+  // // }
+  // // dynamically created IGs
+
+  // // std::cout << map<string,AParallelInteractionStorage*>::iterator it=m_dpis.find(igname) << std::endl;
+  // map<string,AParallelInteractionStorage*>::iterator it=m_dpis.find(igname)
+  // dist.push_back((it->second)->getDistance());
+
+  // // for(typename map<string,AParallelInteractionStorage*>::iterator iter=m_dpis.begin();iter!=m_dpis.end();iter++)
+  // // {
+  // //   dist.push_back((iter->second)->getDistance());
+  // // }
+
+  // // send back to master 
+  // m_tml_comm.send_gather(dist,0);
+
+  // console.XDebug() << "end TSubLattice<T>::getDistance() \n";
+}
+
+
+
 /*!
   Calculate the forces for all interactions contained in the sublattice. 
   Interactions contained in more than one sublattice are calculated in 
