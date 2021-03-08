@@ -128,9 +128,11 @@ public:
   virtual void setParticleVelocity()=0;
   virtual void setParticleFluidForce()=0; // sawano
   virtual void setParticleRadiusFactor()=0; // sawano
+  virtual void setFlagforRadiusExpansion()=0; // sawano
   virtual void setParticleTag()=0; // sawano
   virtual void setBondBrokenSwitch()=0; // sawano
   virtual void getDistance()=0; // sawano
+  virtual void getTotalVolume()=0; // sawano
   virtual void setParticleDensity()=0; 
   virtual void setTaggedParticleVel()=0; 
   virtual void setParticleAngularVelocity(){};

@@ -1196,6 +1196,25 @@ void CLatticeMaster::setParticleRadiusFactor(double factor)
 	barrier.wait("setParticleRadiusFactor");
 }
 
+// sawano
+/*!
+	Call the SubLattice function to set scaling factor of radius for all the
+	particle.
+
+	\param flag  flag for radius expansion
+*/
+void CLatticeMaster::setFlagforRadiusExpansion(int flag)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer buffer(m_global_comm);
+	CMPIBarrier barrier(m_global_comm);
+	console.Debug() << "CLatticeMaster::setFlagforRadiusExpansion @ sawano \n";
+	cmd_buffer.broadcast(CMD_PSFLAG);
+	buffer.append(flag);
+	buffer.broadcast(m_global_rank);
+	barrier.wait("setFlagforRadiusExpansion");
+}
+
 
 /*!
   set the velocity of all particles with a given tag
@@ -2531,6 +2550,37 @@ Vec3 CLatticeMaster::getMinMaxDistance(const std::string &igname)
 
   console.Debug() << "CLatticeMaster::getMinMaxDistance: exit\n";
   return Vec3(minDist,maxDist,0.0);
+}
+
+
+// sawano
+/*!
+  Call sublattice to get the total volume of all the particles
+*/
+const double CLatticeMaster::getTotalVolume()
+{
+  console.Debug() << "CLatticeMaster::getTotalVolume(): enter\n";
+
+  double sum = 0.0;
+
+  // setup command 
+  BroadcastCommand cmd(getGlobalRankAndComm(), CMD_GETTVOLUME);
+  cmd.broadcastCommand();
+
+  // collect data
+  multimap<int,double> volmap;
+  m_tml_global_comm.gather(volmap);
+
+  // int count = 0;
+  for(multimap<int,double>::iterator iter=volmap.begin();
+      iter!=volmap.end();
+      iter++){
+    sum += iter->second;
+  }
+
+  cmd.wait("CLatticeMaster::getTotalVolume");
+  console.Debug() << "CLatticeMaster::getTotalVolume: exit\n";
+  return sum;
 }
 
 

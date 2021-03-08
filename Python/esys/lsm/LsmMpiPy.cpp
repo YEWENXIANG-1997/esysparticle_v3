@@ -1167,6 +1167,19 @@ namespace esys
     }
     
     // sawano
+    void LsmMpiPy::setRadiusExpansion(int flag)
+    {
+    	console.Debug() << "LsmMpiPy::setRadiusExpansion @sawano \n";
+    	getLatticeMaster().setFlagforRadiusExpansion(flag);
+    }
+    
+    // sawano
+    const double LsmMpiPy::getTotalVolume()
+    {
+      return getLatticeMaster().getTotalVolume();
+    }
+
+    // sawano
     void LsmMpiPy::setParticleTag(int id, int tag)
     {
     	getLatticeMaster().setParticleTag(id, tag);
@@ -2959,6 +2972,21 @@ namespace esys
       		 "Set the scaling factor for radius \n"
       		 "@type factor: double\n"
       		 "@kwarg factor: the scaling factor \n")
+      // sawano
+      .def("setRadiusExpansion",
+      		 &LsmMpiPy::setRadiusExpansion,
+      		 (arg("flag")),
+      		 "Set the flag for the radius expation.\n"
+      		 "@type flag: int\n"
+      		 "@kwarg flag: the flag. 0:False, 1:True \n")
+      // sawano
+      .def(
+        "getTotalVolume",
+        &LsmMpiPy::getTotalVolume,
+        "Returns the total volume of all the particle.\n"
+        "@rtype: double\n"
+        "@return: Returns the total volume of all the particle."
+      )
       .def(
         "addPreTimeStepRunnable",
         &LsmMpiPy::addPreTimeStepRunnable,

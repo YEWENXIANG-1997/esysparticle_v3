@@ -126,9 +126,12 @@ TSubLattice<T>::TSubLattice(
     m_mesh(),
     m_mesh2d(),
     m_dt(0),
+    m_t(0),
     m_nrange(0),
     m_alpha(0),
     m_last_ns(0),
+    m_bPacking(false),
+    m_totalVolume(0.0),
     m_temp_conn(),
     m_rank(0),
     m_comm(MPI_COMM_NULL),
@@ -1902,44 +1905,23 @@ void TSubLattice<T>::getDistance()
   else{
     console.XDebug() << "end TSubLattice<T>::getDistance() \n";
   }
+}
 
+// sawano
+/*!
+  Get the total volume of all the particle.
+*/
+template <class T>
+void TSubLattice<T>::getTotalVolume()
+{
+  console.XDebug() << "TSubLattice<T>::getTotalVolume() \n";
 
+  vector<double> vol;
+  vol.push_back(m_totalVolume);
+  // send back to master
+  m_tml_comm.send_gather(vol,0);
 
-  // CVarMPIBuffer pbuffer(m_comm);
-  // bool found=false;
-
-  // // get params
-  // pbuffer.receiveBroadcast(0);
-  // string igname = pbuffer.pop_string();
- 
-
-
-  // vector<double> dist;
-
-  // // // single particle IGs 
-  // // for(
-  // //   typename NameIGroupMap::iterator siter=this->m_singleParticleInteractions.begin();
-  // //   siter != m_singleParticleInteractions.end();
-  // //   siter++
-  // // )
-  // // {
-  // //   dist=(siter->second)->getDistance();
-  // // }
-  // // dynamically created IGs
-
-  // // std::cout << map<string,AParallelInteractionStorage*>::iterator it=m_dpis.find(igname) << std::endl;
-  // map<string,AParallelInteractionStorage*>::iterator it=m_dpis.find(igname)
-  // dist.push_back((it->second)->getDistance());
-
-  // // for(typename map<string,AParallelInteractionStorage*>::iterator iter=m_dpis.begin();iter!=m_dpis.end();iter++)
-  // // {
-  // //   dist.push_back((iter->second)->getDistance());
-  // // }
-
-  // // send back to master 
-  // m_tml_comm.send_gather(dist,0);
-
-  // console.XDebug() << "end TSubLattice<T>::getDistance() \n";
+  console.XDebug() << "end TSubLattice<T>::getTotalVolume() \n";
 }
 
 
@@ -2014,6 +1996,13 @@ void TSubLattice<T>::integrate(double dt)
 template <class T>
 void TSubLattice<T>::oneStep()
 {
+  // sawano
+  if (m_bPacking)
+  {
+    setParticleRadiusFactor_inner(calcFactor());
+    calcTotalVolume();
+  }
+  
   zeroForces();
   calcForces();
   integrate(m_dt);
@@ -2022,6 +2011,43 @@ void TSubLattice<T>::oneStep()
   {
     this->oneStepTherm();
   }
+  m_t++;
+}
+
+// sawano
+/*!
+  return the factor for the radius scaling.
+*/
+template <class T>
+const double TSubLattice<T>::calcTotalVolume()
+{
+  console.XDebug() << "TSubLattice<T>::calcTotalVolume \n";
+  vector<double> vol; // displacements
+  double sum = 0.0;
+  // --- particles --- 
+  // get displacement data 
+  // m_ppa->forAllParticlesGet(vol,&T::getVolume);
+  m_ppa->forAllParticlesGet(vol,(double (T::*)() const)(&T::getVolume));
+  for (auto it = vol.begin(); it < vol.end(); it++)
+  {
+    sum += *it;
+  }
+  m_totalVolume = sum;
+  console.XDebug() << "end TSubLattice<T>::calcTotalVolume \n";
+}
+  
+
+// sawano
+/*!
+  return the factor for the radius scaling.
+*/
+template <class T>
+const double TSubLattice<T>::calcFactor()
+{
+  const double beta = 0.3;
+  const double gamma = 1.0;
+  // std::cout << m_t << std::endl;
+  return 1.0 + beta / pow(m_t+1, gamma);
 }
 
 /*!
@@ -2747,7 +2773,7 @@ template <class T> void TSubLattice<T>::setParticleFluidForce()
 
 // sawano
 /*!
-	Set the velocity of a particle. Parameters are received from master.
+	Set the factor for radius expansion. Parameters are received from master.
 */
 template <class T> void TSubLattice<T>::setParticleRadiusFactor()
 {
@@ -2759,6 +2785,40 @@ template <class T> void TSubLattice<T>::setParticleRadiusFactor()
 	m_ppa->forAllParticles((void (T::*)(double))(&T::scaleRad), fac);
 	console.XDebug() << "end TSubLattice<T>::setParticleRadiusFactor()\n";
 }
+
+// sawano
+/*!
+	Set the factor for radius expansion.
+*/
+template <class T> void TSubLattice<T>::setParticleRadiusFactor_inner(const double fac)
+{
+	console.Debug() << "TSubLattice<T>::setParticleRadiusFactor_inner()\n";
+	m_ppa->forAllParticles((void (T::*)(double))(&T::scaleRad), fac);
+	console.XDebug() << "end TSubLattice<T>::setParticleRadiusFactor_inner()\n";
+}
+
+
+// sawano
+/*!
+	Set the flag for radius expansion.
+*/
+template <class T> void TSubLattice<T>::setFlagforRadiusExpansion()
+{
+	console.Debug() << "TSubLattice<T>::setFlagforRadiusExpansion()\n";
+	CVarMPIBuffer buffer(m_comm);
+
+	buffer.receiveBroadcast(0); // get data from master
+	const int flag = buffer.pop_int();
+  if (flag == 0)
+  {
+    m_bPacking = false;
+  }
+  else{
+    m_bPacking = true;
+  }
+	console.XDebug() << "end TSubLattice<T>::setFlagforRadiusExpansion()\n";
+}
+
 
 /*!
   Set the velocity of a particle. Parameters are received from master. 

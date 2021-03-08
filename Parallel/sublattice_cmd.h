@@ -130,5 +130,7 @@ const int CMD_SETBBROKEN = 5001;
 const int CMD_PSCALEFAC	 = 5002;
 const int CMD_PTAG2      = 5003;
 const int CMD_GETDIST    = 5004;
+const int CMD_PSFLAG	 = 5005;
+const int CMD_GETTVOLUME = 5006;
 
 #endif //__SUBLATTICE_CMD_H

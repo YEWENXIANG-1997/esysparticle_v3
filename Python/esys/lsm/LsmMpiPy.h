@@ -217,7 +217,9 @@ namespace esys
       // sawano
       void setParticleFluidForce(int, const Vec3Py &);
       void setParticleRadiusFactor(double);
+      void setRadiusExpansion(int);
       void setParticleTag(int, int);
+      const double getTotalVolume();
       
       // ---- checkpointing -----------
       void createCheckPointer(const RestartCheckPointPrmsPy &prms);
