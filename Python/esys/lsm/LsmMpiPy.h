@@ -218,6 +218,8 @@ namespace esys
       void setParticleFluidForce(int, const Vec3Py &);
       void setParticleRadiusFactor(double);
       void setRadiusExpansion(int);
+      void setRadiusExpansionParams(double, double);
+      void setParticleRadiusInitFactor(double);
       void setParticleTag(int, int);
       const double getTotalVolume();
       

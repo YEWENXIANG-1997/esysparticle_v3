@@ -132,6 +132,10 @@ TSubLattice<T>::TSubLattice(
     m_last_ns(0),
     m_bPacking(false),
     m_totalVolume(0.0),
+    m_iniFactor(0.0),
+    m_cuml_Factor(1.0),
+    m_beta(0.3),
+    m_gamma(1.0),
     m_temp_conn(),
     m_rank(0),
     m_comm(MPI_COMM_NULL),
@@ -2000,7 +2004,7 @@ void TSubLattice<T>::oneStep()
   if (m_bPacking)
   {
     setParticleRadiusFactor_inner(calcFactor());
-    calcTotalVolume();
+    // calcTotalVolume();
   }
   
   zeroForces();
@@ -2044,10 +2048,16 @@ const double TSubLattice<T>::calcTotalVolume()
 template <class T>
 const double TSubLattice<T>::calcFactor()
 {
-  const double beta = 0.3;
-  const double gamma = 1.0;
+  // const double beta = 0.3;
+  // const double gamma = 1.0;
+  const double fac = 1.0 + m_beta / pow(m_t+1, m_gamma);
+  m_cuml_Factor *= fac;
+  // if(m_cuml_Factor <= m_iniFactor){
+  //   m_bPacking = false;
+  // }
+
   // std::cout << m_t << std::endl;
-  return 1.0 + beta / pow(m_t+1, gamma);
+  return fac;
 }
 
 /*!
@@ -2773,6 +2783,24 @@ template <class T> void TSubLattice<T>::setParticleFluidForce()
 
 // sawano
 /*!
+	Set the params for radius expansion. Parameters are received from master.
+*/
+template <class T> void TSubLattice<T>::setRadiusExpansionParams()
+{
+	console.Debug() << "TSubLattice<T>::setRadiusExpansionParams()\n";
+	CVarMPIBuffer buffer(m_comm);
+
+	buffer.receiveBroadcast(0); // get data from master
+	double beta = buffer.pop_double();
+	double gamma = buffer.pop_double();
+  m_beta = beta;
+  m_gamma = gamma;
+	console.XDebug() << "end TSubLattice<T>::setRadiusExpansionParams()\n";
+}
+
+
+// sawano
+/*!
 	Set the factor for radius expansion. Parameters are received from master.
 */
 template <class T> void TSubLattice<T>::setParticleRadiusFactor()
@@ -2785,6 +2813,23 @@ template <class T> void TSubLattice<T>::setParticleRadiusFactor()
 	m_ppa->forAllParticles((void (T::*)(double))(&T::scaleRad), fac);
 	console.XDebug() << "end TSubLattice<T>::setParticleRadiusFactor()\n";
 }
+
+
+// sawano
+/*!
+	Set the initial factor for radius expansion. Parameters are received from master.
+*/
+template <class T> void TSubLattice<T>::setParticleRadiusInitFactor()
+{
+	console.Debug() << "TSubLattice<T>::setParticleRadiusInitFactor()\n";
+	CVarMPIBuffer buffer(m_comm);
+
+	buffer.receiveBroadcast(0); // get data from master
+	double fac = buffer.pop_double();
+  m_iniFactor = fac;
+	console.XDebug() << "end TSubLattice<T>::setParticleRadiusInitFactor()\n";
+}
+
 
 // sawano
 /*!

@@ -1165,6 +1165,21 @@ namespace esys
     	console.Debug() << "LsmMpiPy::setParticleRadiusFactor @sawano \n";
     	getLatticeMaster().setParticleRadiusFactor(factor);
     }
+
+    // sawano
+    void LsmMpiPy::setRadiusExpansionParams(double beta, double gamma)
+    {
+    	console.Debug() << "LsmMpiPy::setRadiusExpansionParams @sawano \n";
+    	getLatticeMaster().setRadiusExpansionParams(beta, gamma);
+    }
+
+    // sawano
+    void LsmMpiPy::setParticleRadiusInitFactor(double factor)
+    {
+    	console.Debug() << "LsmMpiPy::setParticleRadiusInitFactor @sawano \n";
+    	getLatticeMaster().setParticleRadiusInitFactor(factor);
+    }
+
     
     // sawano
     void LsmMpiPy::setRadiusExpansion(int flag)
@@ -2968,6 +2983,23 @@ namespace esys
       // sawano
       .def("setParticleRadiusFactor",
       		 &LsmMpiPy::setParticleRadiusFactor,
+      		 (arg("factor")),
+      		 "Set the scaling factor for radius \n"
+      		 "@type factor: double\n"
+      		 "@kwarg factor: the scaling factor \n")
+      // sawano
+      .def("setRadiusExpansionParams",
+      		 &LsmMpiPy::setRadiusExpansionParams,
+      		 (arg("beta"),arg("gamma")),
+      		 "Set params. for radius expansion \n"
+      		 "@type beta: double\n"
+      		 "@kwarg beta: beta in radius expansion \n"
+      		 "@type gamma: double\n"
+      		 "@kwarg gamma: gamma in radius expansion \n"
+           )
+      // sawano
+      .def("setParticleRadiusInitFactor",
+      		 &LsmMpiPy::setParticleRadiusInitFactor,
       		 (arg("factor")),
       		 "Set the scaling factor for radius \n"
       		 "@type factor: double\n"

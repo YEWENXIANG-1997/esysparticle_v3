@@ -1176,6 +1176,26 @@ void CLatticeMaster::setParticleTag(int id, int tag)
 	barrier.wait("setParticleTag");
 }
 
+// sawano
+/*!
+	Call the SubLattice function to set params of radius expansion.
+
+	\param beta params.
+	\param gamma params.
+*/
+void CLatticeMaster::setRadiusExpansionParams(double beta, double gamma)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer buffer(m_global_comm);
+	CMPIBarrier barrier(m_global_comm);
+	console.Debug() << "CLatticeMaster::setRadiusExpansionParams @ sawano \n";
+	cmd_buffer.broadcast(CMD_PSCALEPARAMS);
+	buffer.append(beta);
+	buffer.append(gamma);
+	buffer.broadcast(m_global_rank);
+	barrier.wait("setRadiusExpansionParams");
+}
+
 
 // sawano
 /*!
@@ -1195,6 +1215,27 @@ void CLatticeMaster::setParticleRadiusFactor(double factor)
 	buffer.broadcast(m_global_rank);
 	barrier.wait("setParticleRadiusFactor");
 }
+
+// sawano
+/*!
+	Call the SubLattice function to set scaling initial factor of radius for all the
+	particle.
+
+	\param factor initial scaling factor
+*/
+void CLatticeMaster::setParticleRadiusInitFactor(double factor)
+{
+	CMPILCmdBuffer cmd_buffer(m_global_comm, m_global_rank);
+	CVarMPIBuffer buffer(m_global_comm);
+	CMPIBarrier barrier(m_global_comm);
+	console.Debug() << "CLatticeMaster::setParticleRadiusInitFactor @ sawano \n";
+	cmd_buffer.broadcast(CMD_PSCALEINITFAC);
+	buffer.append(factor);
+	buffer.broadcast(m_global_rank);
+	barrier.wait("setParticleRadiusInitFactor");
+}
+
+
 
 // sawano
 /*!

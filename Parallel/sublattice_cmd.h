@@ -132,5 +132,8 @@ const int CMD_PTAG2      = 5003;
 const int CMD_GETDIST    = 5004;
 const int CMD_PSFLAG	 = 5005;
 const int CMD_GETTVOLUME = 5006;
+const int CMD_PSCALEINITFAC	 = 5007;
+const int CMD_PSCALEPARAMS	 = 5008;
+
 
 #endif //__SUBLATTICE_CMD_H

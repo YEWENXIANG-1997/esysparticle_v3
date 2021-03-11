@@ -311,6 +311,8 @@ public:
     void setParticleVel(int,const Vec3&);
     void setParticleFluidForce(int, const Vec3 &); // sawano
     void setParticleRadiusFactor(double); // sawano
+    void setRadiusExpansionParams(double, double); // sawano
+    void setParticleRadiusInitFactor(double); // sawano
     void setFlagforRadiusExpansion(int); // sawano
     void setParticleTag(int, int); // sawano
     void setParticleAngVel(int,const Vec3&);

@@ -103,6 +103,10 @@ class TSubLattice : public ASubLattice
   // sawano
   bool m_bPacking; // flag for packing 
   double m_totalVolume; // total volume of all particles
+  double m_iniFactor; // initial factor for radius expantion
+  double m_cuml_Factor; // cumlation of factor for radius expantion
+  double m_beta; // params for radius expansion
+  double m_gamma; // params for radius expansion
 
   // Temporary storage of connections
   map<int, vector<int> > m_temp_conn;
@@ -232,6 +236,8 @@ class TSubLattice : public ASubLattice
   virtual void setParticleVelocity();
   virtual void setParticleFluidForce(); // sawano
   virtual void setParticleRadiusFactor(); // sawano
+  virtual void setRadiusExpansionParams(); // sawano
+  virtual void setParticleRadiusInitFactor(); // sawano
   virtual void setParticleRadiusFactor_inner(const double fac); // sawano
   virtual void setFlagforRadiusExpansion(); // sawano
   virtual void setParticleTag(); // sawano
