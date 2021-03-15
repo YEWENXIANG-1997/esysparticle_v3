@@ -160,6 +160,7 @@ class CRotBondedInteraction : public ARotPairInteraction
   void setTag(int tag);
 
   void calcForces();
+  void calcForces_Hydrate();
   void calcForces_original();
   //void setBreak(double);
   bool broken();
