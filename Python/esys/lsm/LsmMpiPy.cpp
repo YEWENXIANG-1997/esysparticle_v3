@@ -517,7 +517,8 @@ namespace esys
         bondPrms.max_bMoment,
         bondPrms.scaling,
         bondPrms.meanR_scaling,
-        bondPrms.truncated
+        bondPrms.truncated,
+        bondPrms.basedRadius // sawano
       );
     }
 
@@ -547,7 +548,8 @@ namespace esys
         bondPrms.max_bMoment,
         bondPrms.scaling,
         bondPrms.meanR_scaling,
-        bondPrms.truncated
+        bondPrms.truncated,
+        bondPrms.basedRadius // sawano
       );
     }
 

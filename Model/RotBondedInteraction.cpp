@@ -65,7 +65,8 @@ CRotBondedIGP::CRotBondedIGP()
    meanR_scaling(true),
    truncated(1.0),
    beta1(1.0),
-   beta2(1.0)
+   beta2(1.0),
+   basedRadius(true) // sawan
 {
 }
 
@@ -137,6 +138,43 @@ CRotBondedIGP::CRotBondedIGP(
    max_tMoment = M_PI*cohesion;
 }
 
+// sawano
+CRotBondedIGP::CRotBondedIGP(
+  const  std::string &name,
+  double youngsModulus,
+  double poissonsRatio,
+  double cohesion,
+  double tanAngle,
+  int    tag,
+  bool AmeanR_scaling,
+  double truncated,
+  double beta1,
+  double beta2,
+  bool basedRadius
+)
+ : AIGParam(name),
+   tag(tag),
+   scaling(true),
+   meanR_scaling(AmeanR_scaling),
+   truncated(truncated),
+   beta1(beta1),
+   beta2(beta2),
+   basedRadius(basedRadius)
+{
+   double shearModulus = youngsModulus / (2.0*(1.+poissonsRatio));
+
+   kr = M_PI*youngsModulus;
+   ks = M_PI*shearModulus;
+   kb = M_PI*youngsModulus;
+   kt = M_PI*shearModulus;
+
+   max_nForce = M_PI*cohesion/tanAngle;
+   max_shForce = M_PI*cohesion;
+   max_bMoment = M_PI*cohesion/tanAngle;
+   max_tMoment = M_PI*cohesion;
+}
+
+
 CRotBondedInteraction::CRotBondedInteraction():ARotPairInteraction()
 {
   m_kr = 0.0 ;
@@ -162,6 +200,7 @@ CRotBondedInteraction::CRotBondedInteraction():ARotPairInteraction()
   m_truncated = 1.0;
   m_beta1 = 1.0;
   m_beta2 = 1.0;
+  m_isBasedRadius = true;
 }
 
 CRotBondedInteraction::CRotBondedInteraction(CRotParticle* p1,CRotParticle* p2,const CRotBondedIGP& param):ARotPairInteraction(p1,p2)
@@ -183,6 +222,7 @@ CRotBondedInteraction::CRotBondedInteraction(CRotParticle* p1,CRotParticle* p2,c
   double momentI=1.0;
   m_scaling = param.scaling;
   m_meanR_scaling = param.meanR_scaling;
+  m_isBasedRadius = param.basedRadius; // sawano
   // scale elastic param
   if (m_scaling == true) {
     if(!CParticle::getDo2dCalculations()){
@@ -584,152 +624,6 @@ void CRotBondedInteraction::calcForces_Hydrate()
   m_p2->applyMoment(moment2) ;
 }
 
-void CRotBondedInteraction::calcForces()
-{
-  double s_fai=0.0, c_fai=0.0, c_pasi2=0.0, s_pasi2=0.0;
-  double sita=0.0,  pasi=0.0;
-
-  const Matrix3 mat0 = (m_p1->getQuat()).to_matrix();
-  const Vec3 rbp  = m_p2->getPos() - m_p1->getPos();  // rbp <-> r_f 
-  const double rbpNorm = rbp.norm();
-  const Vec3 rb = mat0*(m_p2->getPos() - m_p1->getPos()); // eq. 11, rb <-> r_c
-  const double rbNorm = rb.norm();
-
-  const double r_0Norm = m_p1->getRad()+m_p2->getRad();  
-  //const double r_0Norm = m_r0;
-  const Vec3 delta_r = (rbNorm - r_0Norm)*rb/rbNorm; // eq. 9, part of eq. 12
-  const Vec3 Fr = m_kr*delta_r ; // rest of eq. 12
-
-  const double gama_cos = dot(rb, m_D)/(rbNorm*m_D.norm()) ; 
-  double gama = 0.0;
-  if (gama_cos < 1.0 && gama_cos > -1.0 )
-  {
-    gama = acos(gama_cos);
-  }
-
-  const Vec3 rb_0 = cross(rb, m_D);
-  const Vec3 rb_b0 = cross(rb, rb_0);
-  const double rb_b0Norm = rb_b0.norm();
-  Vec3 Fst(0.0,0.0,0.0);
-  if (rb_b0Norm != 0)
-  {
-    Fst = m_ks*r_0Norm*gama*rb_b0/rb_b0Norm; // eq. 14
-  }
-
-  Vec3 Mst(0.0,0.0,0.0);
-  const double rb_0Norm = rb_0.norm();
-  if (rb_0Norm != 0)
-  {
-    Mst = -Fst.norm()*rb_0/rb_0Norm; // eq. 15
-  }
-  
-  const double m0 = HALF_SQRT_2*sqrt((rbNorm + rb.Z())/rbNorm);
-  double m1       = -HALF_SQRT_2*sqrt((rbNorm - rb.Z())/rbNorm) ;
-  double m2       = -m1;
-  const double m3 = 0.0;
-  const double rbX2PlusRbY2 = rb.X()*rb.X() + rb.Y()*rb.Y();
-  if (rbX2PlusRbY2 != 0.0)
-  {
-    const double denomSqrt = sqrt(rbX2PlusRbY2);
-    m1 = m1*rb.Y()/denomSqrt;
-    m2 = m2*rb.X()/denomSqrt;
-  }
-
-  const Quaternion qm(m0, Vec3(m1,m2,m3));
-  const Matrix3 mat   = qm.to_matrix();
-  const Matrix3 matTrans(mat.trans());
-  const Quaternion rp = (m_p1->getQuat()).inverse() * (m_p2->getQuat());
-  const Quaternion r = qm.inverse() * rp * qm;
-  const double temp0 = r.return_sca()*r.return_sca() +
-                       r.return_vec().Z()*r.return_vec().Z();
-  if(temp0 == 0.0)
-  {
-    pasi = 0.0;
-  }
-  else
-  {
-    const double sqrtTemp0 = sqrt(temp0);
-    c_pasi2 = r.return_sca()/sqrtTemp0;
-    s_pasi2 = r.return_vec().Z()/sqrtTemp0;
-    pasi = 2.0 * calc_angle(s_pasi2,c_pasi2);
-  }
-  const Vec3 Mtp = Vec3(0.0,0.0, m_kt*pasi);
-  const Vec3 Mtr = matTrans * Mtp;
-  const double temp2 = r.return_vec().X()*r.return_vec().X() +
-                       r.return_vec().Y()*r.return_vec().Y();
-  const double temp3 = r.return_vec().X()*r.return_vec().Z() +
-                       r.return_sca() * r.return_vec().Y();
-  const double temp4 = r.return_vec().Y()*r.return_vec().Z() -
-                       r.return_sca() * r.return_vec().X();
-
-  Vec3 Mbr(0, 0, 0);
-  Vec3 Fsr(0, 0, 0);
-  Vec3 Msr(0, 0, 0);                       
-  if (temp2 != 0.0)
-  {
-    const double temp1 = temp0 -  temp2;
-    if (temp1 >= 1.0 || temp1 <= -1.0)
-    {
-      sita = 0.0 ;
-    }
-    else
-    {
-      sita = acos(temp1);
-    }
-    if (temp0 == 0.0) {
-      const double sqrtDenom = sqrt(temp2);
-      c_fai =  r.return_vec().Y()/sqrtDenom;
-      s_fai = -r.return_vec().X()/sqrtDenom;
-    } else {
-      const double sqrtDenom = sqrt(temp0*temp2);
-      c_fai = temp3/sqrtDenom;
-      s_fai = temp4/sqrtDenom;
-    }
-    const Vec3 Mbp = Vec3( - 0.5*m_kb*sita*s_fai, 0.5*m_kb*sita*c_fai, 0.0); // eq 16.1
-    Mbr = matTrans * Mbp; // eq. 17.1
-    const Vec3 Fsp = Vec3 ( - 0.5*m_ks*c_fai*sita*r_0Norm,
-                            - 0.5*m_ks*s_fai*sita*r_0Norm,
-			    0.0); // eq. 16.3
-    Fsr = matTrans * Fsp; // eq. 17.3
-
-    const Vec3 Msp = Vec3(   0.5*m_ks*s_fai*sita*r_0Norm,
-                           - 0.5*m_ks*c_fai*sita*r_0Norm,
-                             0.0  ); 
-    // above is diff to paper: r instead r^2 here, other r moved to eq 19 below
-    Msr = matTrans * Msp;
-  }
-
-  const double eq_rad1 = m_p1->getRad()/(m_p1->getRad()+m_p2->getRad());
-  const double eq_rad2 = m_p2->getRad()/(m_p1->getRad()+m_p2->getRad());
-
-  const Matrix3 mat0Trans(mat0.trans());
-  m_force  =  mat0Trans * (Fr + Fst + Fsr );
-  m_moment =  mat0Trans * (Mbr + Mtr + Msr*eq_rad1*rbpNorm + Mst*eq_rad1*rbpNorm); // eq. 19 for particle 1 
-
-  const Vec3 moment2 = mat0Trans *( Msr*eq_rad2*rbpNorm + Mst*eq_rad2*rbpNorm - Mbr - Mtr);  // eq. 19 for particle 2
-
-  m_shForce = (Fst + Fsr).norm();
-  m_tMoment = Mtr.norm();
-  m_bMoment = Mbr.norm();
-  const double r0 = m_p1->getRad()+m_p2->getRad();
-  const Vec3 D = m_p1->getPos() - m_p2->getPos();
-  m_dist = sqrt(D*D);
-
-  m_nForce = ((m_dist < r0) ? -1.0 : 1.0) * Fr.norm();
-
-  Vec3 pos=m_p2->getPos()+(m_p2->getRad()/(m_p1->getRad()+m_p2->getRad()))*D;
-
-  m_p2->applyForce(-1.0*m_force,pos);
-  m_p1->applyForce(m_force,pos);
-  m_cpos=pos;
-
-  m_p1->applyMoment(m_moment) ;
-  m_p2->applyMoment(moment2) ;
-}
-
-
-#endif
-
 void CRotBondedInteraction::calcForces_original()
 {
   double s_fai=0.0, c_fai=0.0, c_pasi2=0.0, s_pasi2=0.0;
@@ -742,7 +636,6 @@ void CRotBondedInteraction::calcForces_original()
   const double rbNorm = rb.norm();
 
   const double r_0Norm = m_p1->getRad()+m_p2->getRad();  
-  //const double r_0Norm = m_r0;
   const Vec3 delta_r = (rbNorm - r_0Norm)*rb/rbNorm; // eq. 9, part of eq. 12
   const Vec3 Fr = m_kr*delta_r ; // rest of eq. 12
 
@@ -872,6 +765,21 @@ void CRotBondedInteraction::calcForces_original()
   m_p1->applyMoment(m_moment) ;
   m_p2->applyMoment(moment2) ;
 }
+
+void CRotBondedInteraction::calcForces()
+{
+  if (m_isBasedRadius)
+  {
+    calcForces_original();
+  }
+  else{
+    calcForces_Hydrate();
+  }
+}
+
+#endif
+
+
 
 double CRotBondedInteraction::getPotentialEnergy() const
 {

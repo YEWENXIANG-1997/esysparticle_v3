@@ -131,6 +131,7 @@ void TRotSubLattice<T>::addRotBondedIG()
   bool   scaling = static_cast<bool>(param_buffer.pop_int());
   bool   meanR_scaling = static_cast<bool>(param_buffer.pop_int());
   double truncated = param_buffer.pop_double();
+  bool   basedRadius = static_cast<bool>(param_buffer.pop_int()); // sawano
   
   conns = TSubLattice<T>::m_temp_conn[tag];
 
@@ -146,6 +147,7 @@ void TRotSubLattice<T>::addRotBondedIG()
     << ", tMom=" << max_tMoment
     << ", bMom=" << max_bMoment
     << ", scaling=" << scaling
+    << ", basedRadius=" << basedRadius // sawano
     << "\n";
   // setup InteractionGroup
   CRotBondedIGP param;
@@ -161,6 +163,7 @@ void TRotSubLattice<T>::addRotBondedIG()
   param.scaling = scaling;
   param.meanR_scaling = meanR_scaling;
   param.truncated = truncated;
+  param.basedRadius = basedRadius; // sawano
   ParallelInteractionStorage_EB<CRotParticle,CRotBondedInteraction> *B_PIS = 
     new ParallelInteractionStorage_EB<CRotParticle,CRotBondedInteraction>(this->m_ppa,param);
 

@@ -69,6 +69,22 @@ public:
     double beta2
   );
 
+  // sawano
+  CRotBondedIGP(
+    const  std::string &name,
+    double youngsModulus,
+    double poissonsRatio,
+    double cohesion,
+    double tanAngle,
+    int    tag,
+    bool   AmeanR_scaling,
+    double truncated,
+    double beta1,
+    double beta2,
+    bool   basedRadius
+  );
+
+
   virtual std::string getTypeString() const
   {
     return "RotBonded";
@@ -82,6 +98,8 @@ public:
   double truncated;
   double beta1;
   double beta2;
+  // sawano
+  bool   basedRadius;
 };
 
 /*!
@@ -142,6 +160,7 @@ class CRotBondedInteraction : public ARotPairInteraction
   double m_normalthreshold;
   double m_r_0Norm;
   bool m_isFirst;
+  bool m_isBasedRadius;
   //////////////////////
 
  public:

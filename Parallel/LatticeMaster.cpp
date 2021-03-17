@@ -2464,7 +2464,8 @@ void CLatticeMaster::addRotBondedIG(
   double max_bMoment,
   bool   scaling,
   bool   meanR_scaling,
-  double truncated
+  double truncated,
+  bool   basedRadius // sawano
 )
 {
   CMPILCmdBuffer cmd_buffer(m_global_comm,m_global_rank);
@@ -2489,6 +2490,7 @@ void CLatticeMaster::addRotBondedIG(
   pbuffer.append(static_cast<int>(scaling));
   pbuffer.append(static_cast<int>(meanR_scaling));
   pbuffer.append(truncated);
+  pbuffer.append(basedRadius); // sawano
 
   pbuffer.broadcast(0);
 

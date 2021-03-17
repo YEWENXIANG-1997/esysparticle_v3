@@ -277,7 +277,8 @@ public:
     int getNumSteps() const {return m_max_ts;};
     int getSteps() const {return m_t;};
 
-    void addRotBondedIG(int,const std::string&,double,double,double,double,double,double,double,double,bool,bool,double);  
+    void addRotBondedIG(int,const std::string&,double,double,double,double,double,double,double,double,bool,bool,double,bool);   // sawano
+    // void addRotBondedIG(int,const std::string&,double,double,double,double,double,double,double,double,bool,bool,double);  
     void addRotThermBondedIG(const CRotThermBondedIGP &prms);
 
 //    ParticleIdPairVector getBondGroupIdPairs(const std::string &groupName);
