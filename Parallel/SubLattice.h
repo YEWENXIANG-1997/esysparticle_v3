@@ -92,12 +92,21 @@ class TSubLattice : public ASubLattice
   map<string,Mesh2D*> m_mesh2d;
 
   // -- parameters --
-  double m_dt; // time step for integration
+  double m_dt; // time step for integration  // sawano:this is not a time step. This is the time which has unit!
+  double m_t; // time step // sawano
   double m_nrange; // search range for neighbor table
   //  double m_rmax; // max. particle radius
   double m_alpha; // search range padding
 
   int m_last_ns; // timestamp of last neighborsearch
+
+  // sawano
+  bool m_bPacking; // flag for packing 
+  double m_totalVolume; // total volume of all particles
+  double m_iniFactor; // initial factor for radius expantion
+  double m_cuml_Factor; // cumlation of factor for radius expantion
+  double m_beta; // params for radius expansion
+  double m_gamma; // params for radius expansion
 
   // Temporary storage of connections
   map<int, vector<int> > m_temp_conn;
@@ -137,6 +146,8 @@ class TSubLattice : public ASubLattice
   void thermExpansion();
   void calcHeatFrict();
   void calcHeatTrans();
+  const double calcFactor(); // sawano
+  const double calcTotalVolume(); // sawano
 
   // functions doing the actual work adding interaction groups
   virtual bool doAddPIG(const string&,const string&,CVarMPIBuffer&,bool tagged=false);
@@ -225,7 +236,13 @@ class TSubLattice : public ASubLattice
   virtual void setParticleVelocity();
   virtual void setParticleFluidForce(); // sawano
   virtual void setParticleRadiusFactor(); // sawano
+  virtual void setRadiusExpansionParams(); // sawano
+  virtual void setParticleRadiusInitFactor(); // sawano
+  virtual void setParticleRadiusFactor_inner(const double fac); // sawano
+  virtual void setFlagforRadiusExpansion(); // sawano
   virtual void setParticleTag(); // sawano
+  virtual void getDistance(); // sawano
+  virtual void getTotalVolume(); // sawano
   virtual void setVelocityOfWall();
   virtual void setParticleNonDynamic();
   virtual void setParticleNonRot();

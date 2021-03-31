@@ -31,6 +31,9 @@ namespace esys
         m_insertedParticles(),
         m_tablePtr()
     {
+      // sawano
+      // cout << "NeighborTable constructor1:" << m_bBox.getMinPt() << "," << m_bBox.getMinPt() << endl;
+      // cout << "NeighborTable constructor1:" << m_gridSpacing << endl;
       resize(bBox, gridSpacing);
     }
 
@@ -46,6 +49,11 @@ namespace esys
         m_insertedParticles(nTable.m_insertedParticles),
         m_tablePtr()
     {
+      // sawano
+      cout << "NeighborTable constructor2:" << m_bBox.getMinPt() << "," << m_bBox.getMinPt() << endl;
+      cout << "NeighborTable constructor2:" << m_gridSpacing << endl;
+      cout << "NeighborTable constructor2:" << nTable.getNumCells() << endl;
+
       m_tablePtr =
         ParticleVectorArrayPtr(
           new ParticleVector[nTable.getNumCells()]
@@ -87,6 +95,9 @@ namespace esys
     )
     {
       ParticleVector particles = getInsertedParticles();
+      // sawano
+      // cout << "in NeightbourTable::resize" << bBox.getMinPt() << "," <<  bBox.getMaxPt() << endl;
+      // cout << "in NeightbourTable::resize" << gridSpacing << endl;
       clearAndRecomputeGrid(bBox, gridSpacing);
       for (
         typename ParticleVector::iterator it = particles.begin();
@@ -302,6 +313,11 @@ namespace esys
       clear();
       m_bBox = bBox;
       m_gridSpacing = gridSpacing;
+
+      // sawano
+      // cout << "in NeightbourTable::clearAndRecomputeGrid" << bBox.getMinPt() << "," <<  bBox.getMaxPt() << endl;
+      // cout << "in NeightbourTable::clearAndRecomputeGrid" << gridSpacing << endl;
+
 
       const Vec3 dims  = m_bBox.getSizes()/gridSpacing;
       m_dimensions =

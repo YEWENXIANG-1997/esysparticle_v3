@@ -242,6 +242,11 @@ public:
 
     // sawano
     void setBondBrokenSwitch(const std::string &interactionName, int fbond);
+    // sawano
+    Vec3 getMinMaxDistance(const std::string &igname);
+    // sawano
+    const double getTotalVolume();
+
     
     void readAndDistributeTriMesh(const std::string&,const std::string&,int);
     void readAndDistributeTriMesh(const std::string&,const std::string&);
@@ -272,7 +277,8 @@ public:
     int getNumSteps() const {return m_max_ts;};
     int getSteps() const {return m_t;};
 
-    void addRotBondedIG(int,const std::string&,double,double,double,double,double,double,double,double,bool,bool,double);  
+    void addRotBondedIG(int,const std::string&,double,double,double,double,double,double,double,double,bool,bool,double,bool);   // sawano
+    // void addRotBondedIG(int,const std::string&,double,double,double,double,double,double,double,double,bool,bool,double);  
     void addRotThermBondedIG(const CRotThermBondedIGP &prms);
 
 //    ParticleIdPairVector getBondGroupIdPairs(const std::string &groupName);
@@ -306,6 +312,9 @@ public:
     void setParticleVel(int,const Vec3&);
     void setParticleFluidForce(int, const Vec3 &); // sawano
     void setParticleRadiusFactor(double); // sawano
+    void setRadiusExpansionParams(double, double); // sawano
+    void setParticleRadiusInitFactor(double); // sawano
+    void setFlagforRadiusExpansion(int); // sawano
     void setParticleTag(int, int); // sawano
     void setParticleAngVel(int,const Vec3&);
     void setParticleDensity(int tag,int mask,double rho);

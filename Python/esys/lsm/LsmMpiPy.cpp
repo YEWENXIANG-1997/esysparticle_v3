@@ -447,6 +447,14 @@ namespace esys
     	getLatticeMaster().setBondBrokenSwitch(interactionName, fbond);
     }
 
+    // sawano
+    Vec3Py LsmMpiPy::getMinMaxDistance(const std::string& igname)
+    {
+      
+      return getLatticeMaster().getMinMaxDistance(igname);
+    }
+
+
     void LsmMpiPy::createNRotBondInteractGrp(
       const NRotBondPrmsPy &bondPrms
     )
@@ -509,7 +517,8 @@ namespace esys
         bondPrms.max_bMoment,
         bondPrms.scaling,
         bondPrms.meanR_scaling,
-        bondPrms.truncated
+        bondPrms.truncated,
+        bondPrms.basedRadius // sawano
       );
     }
 
@@ -539,7 +548,8 @@ namespace esys
         bondPrms.max_bMoment,
         bondPrms.scaling,
         bondPrms.meanR_scaling,
-        bondPrms.truncated
+        bondPrms.truncated,
+        bondPrms.basedRadius // sawano
       );
     }
 
@@ -1157,7 +1167,35 @@ namespace esys
     	console.Debug() << "LsmMpiPy::setParticleRadiusFactor @sawano \n";
     	getLatticeMaster().setParticleRadiusFactor(factor);
     }
+
+    // sawano
+    void LsmMpiPy::setRadiusExpansionParams(double beta, double gamma)
+    {
+    	console.Debug() << "LsmMpiPy::setRadiusExpansionParams @sawano \n";
+    	getLatticeMaster().setRadiusExpansionParams(beta, gamma);
+    }
+
+    // sawano
+    void LsmMpiPy::setParticleRadiusInitFactor(double factor)
+    {
+    	console.Debug() << "LsmMpiPy::setParticleRadiusInitFactor @sawano \n";
+    	getLatticeMaster().setParticleRadiusInitFactor(factor);
+    }
+
     
+    // sawano
+    void LsmMpiPy::setRadiusExpansion(int flag)
+    {
+    	console.Debug() << "LsmMpiPy::setRadiusExpansion @sawano \n";
+    	getLatticeMaster().setFlagforRadiusExpansion(flag);
+    }
+    
+    // sawano
+    const double LsmMpiPy::getTotalVolume()
+    {
+      return getLatticeMaster().getTotalVolume();
+    }
+
     // sawano
     void LsmMpiPy::setParticleTag(int id, int tag)
     {
@@ -2102,10 +2140,10 @@ namespace esys
       )
 
       .def( // sawano
-	"createInteractionGroup",
-	&LsmMpiPy::createFluidForce,
-	(arg("prms"))
-	)
+      "createInteractionGroup",
+      &LsmMpiPy::createFluidForce,
+      (arg("prms"))
+      )
 
       .def(
         "createInteractionGroup",
@@ -2311,11 +2349,11 @@ namespace esys
 
       // sawano
       .def("createFluidForce",
-	 &LsmMpiPy::createFluidForce,
-	 (arg("prms")),
-	 "Creates a fluid body force within the model.\n"
-	 "@type prms: L{FluidForcePrms<esys.lsm.LsmPy.FluidForcePrms>}\n"
-	 "@kwarg prms: 0,0,0.\n")
+      &LsmMpiPy::createFluidForce,
+      (arg("prms")),
+      "Creates a fluid body force within the model.\n"
+      "@type prms: L{FluidForcePrms<esys.lsm.LsmPy.FluidForcePrms>}\n"
+      "@kwarg prms: 0,0,0.\n")
       .def(
         "createInteractionGroupTagged",
         &LsmMpiPy::createRotFrictionInteractGrpTag,
@@ -2470,13 +2508,13 @@ namespace esys
       )
       // sawano
       .def("setBondBrokenSwitch",
-	 &LsmMpiPy::setBondBrokenSwitch,
-	 (arg("interactionName"), arg("unbrokenflag")),
-	 "Set the switch of bond breaking for brittlebeam.\n"
-	 "@type interactionName: string\n"
-	 "@type unbrokenflag: int\n"
-	 "@kwarg interactionName: interactionName.\n"
-	 "@kwarg bBroken: flag for bond breaking. 1:unbroken, other:broken.")
+      &LsmMpiPy::setBondBrokenSwitch,
+      (arg("interactionName"), arg("unbrokenflag")),
+      "Set the switch of bond breaking for brittlebeam.\n"
+      "@type interactionName: string\n"
+      "@type unbrokenflag: int\n"
+      "@kwarg interactionName: interactionName.\n"
+      "@kwarg bBroken: flag for bond breaking. 1:unbroken, other:broken.")
       .def(
         "getWallPosition",
         &LsmMpiPy::getWallPosition,
@@ -2486,6 +2524,17 @@ namespace esys
         "Get position of named wall. Returns (0,0,0) for unknown walls.\n"
         "@type name: str\n"
         "@kwarg name: Name of the wall.\n"
+      )
+      // sawano
+      .def(
+        "getMinMaxDistance",
+        &LsmMpiPy::getMinMaxDistance,
+        (arg("name")),
+       "Provides the  minimum and maximum distance of all the particles in the specified name.\n"
+        "@type name: string\n"
+        "@kwarg name: name of interaction group\n"
+        "@rtype: L{Vec3<esys.lsm.util.FoundationPy>}\n"
+        "@return: min and max of distance for all the particles."
       )
       .def(
         "getWallForce",
@@ -2940,6 +2989,38 @@ namespace esys
       		 "Set the scaling factor for radius \n"
       		 "@type factor: double\n"
       		 "@kwarg factor: the scaling factor \n")
+      // sawano
+      .def("setRadiusExpansionParams",
+      		 &LsmMpiPy::setRadiusExpansionParams,
+      		 (arg("beta"),arg("gamma")),
+      		 "Set params. for radius expansion \n"
+      		 "@type beta: double\n"
+      		 "@kwarg beta: beta in radius expansion \n"
+      		 "@type gamma: double\n"
+      		 "@kwarg gamma: gamma in radius expansion \n"
+           )
+      // sawano
+      .def("setParticleRadiusInitFactor",
+      		 &LsmMpiPy::setParticleRadiusInitFactor,
+      		 (arg("factor")),
+      		 "Set the scaling factor for radius \n"
+      		 "@type factor: double\n"
+      		 "@kwarg factor: the scaling factor \n")
+      // sawano
+      .def("setRadiusExpansion",
+      		 &LsmMpiPy::setRadiusExpansion,
+      		 (arg("flag")),
+      		 "Set the flag for the radius expation.\n"
+      		 "@type flag: int\n"
+      		 "@kwarg flag: the flag. 0:False, 1:True \n")
+      // sawano
+      .def(
+        "getTotalVolume",
+        &LsmMpiPy::getTotalVolume,
+        "Returns the total volume of all the particle.\n"
+        "@rtype: double\n"
+        "@return: Returns the total volume of all the particle."
+      )
       .def(
         "addPreTimeStepRunnable",
         &LsmMpiPy::addPreTimeStepRunnable,

@@ -195,6 +195,33 @@ void ParallelInteractionStorage_ED<P,InteractionType>::calcHeatTrans()
   }
 }
 
+// sawano
+template<typename P,typename InteractionType>
+const Vec3 ParallelInteractionStorage_ED<P,InteractionType>::getDistance()
+{
+  console.Debug()
+    << "getDistance() in ParallelInteractionStorage_ED\n" ;
+
+  double minDist =+1.0;
+  double maxDist =-1.0;
+  double dist = 0.0;
+
+  // int count = 0;
+  for(
+    typename list<InteractionType>::iterator it = this->m_interactions.begin();
+    it != this->m_interactions.end();
+    it++
+  ){
+    dist = it->getDistance();
+    minDist = min(dist, minDist);
+    maxDist = max(dist, maxDist);
+    // std::cout << "ParallelInteractionStorage_ED:" << count << ", " << dist << std::endl;
+    // count++;
+  }
+  return Vec3(minDist, maxDist, 0.0);
+}
+
+
 /*! 
    save checkpoint (i.e. restart) data
 */

@@ -335,6 +335,22 @@ namespace esys
         double beta1,
         double beta2
       );
+
+      // sawano
+      BrittleBeamPrmsPy(
+        const  std::string &name,
+        double youngsModulus,
+        double poissonsRatio,
+        double cohesion,
+        double tanAngle,
+        int    aTag,
+        bool   meanR_scaling,
+        double truncated,
+        double beta1,
+        double beta2,
+        bool   basedRadius
+      );
+
     };
 
     /*!

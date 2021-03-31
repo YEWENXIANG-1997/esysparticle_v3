@@ -66,6 +66,7 @@ public:
   inline void setID(int id) {m_global_id = id;}
 
   inline void scaleRad(double factor) { m_rad = factor * m_rad; } // sawano
+  inline double getVolume() { return 4.0/3.0*3.141592654*pow(m_rad, 3); } // sawano
 
   inline void moveBy(Vec3 v){m_pos+=v;} //!< move relative to current position
   inline void moveTo(Vec3 v){m_pos=v;} //!< move absolute

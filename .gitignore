@@ -26,9 +26,9 @@ libltdl/
 Config/
 
 
-#.libs
-#.deps
-#.dirstamp
+.libs
+# .deps
+# .dirstamp
 
 missing
 libtool
@@ -39,8 +39,21 @@ stamp-h1
 install-sh
 depcomp
 configure.ac
+configure_macos.ac
+configure_macos
 instshell.sh
 instshell*
+Python/MpiPython/esysparticle
+Tools/ExtractFractures/fracextract
+Tools/ExtractGrains/grainextract
+Tools/ExtractStrain/strainextract
+Tools/ForceChains/fcconv
+Tools/StressCalculator/raw2tostress
+Tools/dump2geo/dump2geo
+Tools/dump2pov/dump2pov
+Tools/dump2vtk/dump2vtk
+Tools/mesh2pov/mesh2pov
+Tools/rotextract/rotextract
 
 #fracextract
 #grainextract

@@ -53,8 +53,8 @@ test "x$exec_prefix" = "xNONE" && exec_prefix=$prefix
 # (with a small modification for Automake version number, and of course a change to the
 # associated comments reflecting the real reason for the fix --- the patch is for build
 # error, not for Automake warning).  For now, do not use the option.
-#AM_INIT_AUTOMAKE([subdir-objects])
-AM_INIT_AUTOMAKE([])
+AM_INIT_AUTOMAKE([subdir-objects])
+#AM_INIT_AUTOMAKE([])
 #AM_PATH_CPPUNIT([1.10.0], ,[AC_MSG_ERROR([Dud CppUnit version found, must be >= 1.10.0.])])
 AM_PATH_PYTHON([2.6])
 

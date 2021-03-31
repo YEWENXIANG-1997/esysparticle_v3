@@ -646,6 +646,41 @@ namespace esys
     {
     }
 
+    // sawano
+    /*!
+      constructor for BrittleBeamPrmsPy
+    
+      \param name
+      \param youngsModulus
+      \param poissonsRatio
+      \param cohesion
+      \param tanAngle
+      \param aTag
+      \param meanR_scaling
+      \param truncated
+      \param beta1
+      \param beta2
+      \param basedRadius
+    */
+    BrittleBeamPrmsPy::BrittleBeamPrmsPy(
+      const  std::string &name,
+      double youngsModulus,
+      double poissonsRatio,
+      double cohesion,
+      double tanAngle,
+      int    aTag,
+      bool   meanR_scaling,
+      double truncated,
+      double beta1,
+      double beta2,
+      bool   basedRadius
+    )
+      : CRotBondedIGP(
+          name,youngsModulus,poissonsRatio,cohesion,tanAngle,aTag,meanR_scaling,truncated,beta1,beta2,basedRadius)
+    {
+    }
+
+
     FrictionPrmsPy::FrictionPrmsPy(
       const  std::string &name,
       double youngsModulus,
@@ -1565,6 +1600,60 @@ namespace esys
           "@kwarg beta1: factor by which to suppress bending in failure criterion\n"
           "@type beta2: double\n"
           "@kwarg beta2: factor by which to suppress torsion in failure criterion\n"
+        )
+      )
+      .def(
+        boost::python::init<
+          const std::string &,
+          double,
+          double,
+          double,
+          double,
+          int,
+          bool,
+          double,
+          double,
+          double,
+          bool
+        >(
+          (
+            arg("name"),
+            arg("youngsModulus"),
+            arg("poissonsRatio"),
+            arg("cohesion"),
+            arg("tanAngle"),
+            arg("tag"),
+            arg("meanR_scaling"),
+            arg("truncated"),
+            arg("beta1"),
+            arg("beta2"),
+            arg("basedRadius")
+          ),
+          "Parameters defining elastic-brittle beam interactions between bonded particles.\n"
+          "@type name: string\n"
+          "@kwarg name: Name assigned to this group of interactions.\n"
+          "@type youngsModulus: float\n"
+          "@kwarg youngsModulus: Youngs Modulus for bonds (stress units).\n"
+          "@type poissonsRatio: float\n"
+          "@kwarg poissonsRatio: Poisson's ratio for bonds (dimensionless).\n"
+          "@type cohesion: float\n"
+          "@kwarg cohesion: Mohr-Coulomb cohesion factor (stress units).\n"
+          "@type tanAngle: float\n"
+          "@kwarg tanAngle: tan(angle of internal friction) for Mohr-Coulomb failure criterion (dimensionless).\n"
+          "@type tag: int\n"
+          "@kwarg tag: Connections which are tagged with C{tag}"
+          " will be created with these parameters.\n"
+          "@type meanR_scaling: bool\n"
+          "@kwarg meanR_scaling: use mean particle radius instead of "
+          "min particle radius as the radius of bonds\n"
+          "@type truncated: double\n"
+          "@kwarg truncated: factor by which to truncate tensile strength\n"
+          "@type beta1: double\n"
+          "@kwarg beta1: factor by which to suppress bending in failure criterion\n"
+          "@type beta2: double\n"
+          "@kwarg beta2: factor by which to suppress torsion in failure criterion\n"
+          "@type basedRadius: bool\n"
+          "@kwarg basedRadius: the switch for the distance based on the sum of two rad or initial position.\n"
         )
       )
       .def(

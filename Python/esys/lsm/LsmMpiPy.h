@@ -181,6 +181,9 @@ namespace esys
       // sawano
       void setBondBrokenSwitch(const std::string &interactionName, int fBond);
 
+      // --- packing functions ---
+      // sawano
+      Vec3Py getMinMaxDistance(const std::string& igname);
       
       // --- remove interactions ---
       void removeInteractionGrp(const std::string&);
@@ -214,7 +217,11 @@ namespace esys
       // sawano
       void setParticleFluidForce(int, const Vec3Py &);
       void setParticleRadiusFactor(double);
+      void setRadiusExpansion(int);
+      void setRadiusExpansionParams(double, double);
+      void setParticleRadiusInitFactor(double);
       void setParticleTag(int, int);
+      const double getTotalVolume();
       
       // ---- checkpointing -----------
       void createCheckPointer(const RestartCheckPointPrmsPy &prms);

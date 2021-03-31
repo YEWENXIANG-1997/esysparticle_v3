@@ -125,9 +125,15 @@ const int CMD_GETTRIMESHFORCE=4099;
 // sawano
 // -------------------------------
 
-const int CMD_PFF				 = 5000;
+const int CMD_PFF        = 5000;
 const int CMD_SETBBROKEN = 5001;
 const int CMD_PSCALEFAC	 = 5002;
-const int CMD_PTAG2			 = 5003;
+const int CMD_PTAG2      = 5003;
+const int CMD_GETDIST    = 5004;
+const int CMD_PSFLAG	 = 5005;
+const int CMD_GETTVOLUME = 5006;
+const int CMD_PSCALEINITFAC	 = 5007;
+const int CMD_PSCALEPARAMS	 = 5008;
+
 
 #endif //__SUBLATTICE_CMD_H

@@ -65,6 +65,11 @@ class ARotPairInteraction : public AInteraction
   virtual void calcHeatTrans() {}
   virtual void calcHeatFrict() {}
 
+  // sawano
+  virtual const double getDistance();
+  // sawano
+
+
   // dummy implementations for save/load of restart parameters
   virtual void saveRestartData(std::ostream &oStream){};
   virtual void loadRestartData(std::istream &iStream){};

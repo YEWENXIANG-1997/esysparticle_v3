@@ -200,6 +200,8 @@ void VectorInteractionFieldMaster::writeAsRAW2()
   
   // write data
   ofstream out_file(fn.c_str());
+  // sawano
+  out_file.precision(11);
   // check if file is sucessfully opened
   if(!out_file){
     console.Error() << "can not open output file " << fn << "\n";
