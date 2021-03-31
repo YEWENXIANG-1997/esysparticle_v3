@@ -66,7 +66,7 @@ CRotBondedIGP::CRotBondedIGP()
    truncated(1.0),
    beta1(1.0),
    beta2(1.0),
-   basedRadius(true) // sawan
+   basedRadius(false) // sawan
 {
 }
 
@@ -260,8 +260,8 @@ CRotBondedInteraction::CRotBondedInteraction(CRotParticle* p1,CRotParticle* p2,c
 
   // sawano ////////////
   // m_normalthreshold = effA * param.truncated;
-  m_normalthreshold = M_PI * Rave * Rave * param.truncated;
-  // m_normalthreshold = M_PI * effA * param.truncated;
+  // m_normalthreshold = M_PI * Rave * Rave * param.truncated;
+  m_normalthreshold = M_PI * effA * param.truncated;
   m_isFirst = true;
   //////////////////////
 }
