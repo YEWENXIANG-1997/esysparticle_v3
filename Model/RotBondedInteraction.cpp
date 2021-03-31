@@ -200,7 +200,7 @@ CRotBondedInteraction::CRotBondedInteraction():ARotPairInteraction()
   m_truncated = 1.0;
   m_beta1 = 1.0;
   m_beta2 = 1.0;
-  m_isBasedRadius = true;
+  m_isBasedRadius = false;
 }
 
 CRotBondedInteraction::CRotBondedInteraction(CRotParticle* p1,CRotParticle* p2,const CRotBondedIGP& param):ARotPairInteraction(p1,p2)
