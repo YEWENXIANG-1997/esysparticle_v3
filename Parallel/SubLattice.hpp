@@ -2021,6 +2021,7 @@ void TSubLattice<T>::oneStep()
 // sawano
 /*!
   return the factor for the radius scaling.
+  WARNING : it cannot be used.
 */
 template <class T>
 const double TSubLattice<T>::calcTotalVolume()
@@ -2031,11 +2032,13 @@ const double TSubLattice<T>::calcTotalVolume()
   // --- particles --- 
   // get displacement data 
   // m_ppa->forAllParticlesGet(vol,&T::getVolume);
-  m_ppa->forAllParticlesGet(vol,(double (T::*)() const)(&T::getVolume));
-  for (auto it = vol.begin(); it < vol.end(); it++)
-  {
-    sum += *it;
-  }
+
+  // commented out because of gcc4.8.
+  // m_ppa->forAllParticlesGet(vol,(double (T::*)() const)(&T::getVolume));
+  // for (auto it = vol.begin(); it < vol.end(); it++)
+  // {
+  //   sum += *it;
+  // }
   m_totalVolume = sum;
   console.XDebug() << "end TSubLattice<T>::calcTotalVolume \n";
 }
